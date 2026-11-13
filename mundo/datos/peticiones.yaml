@@ -1,0 +1,692 @@
+# Peticiones del consejo diario. Editable.
+#
+# Cada mañana el motor elige 2 o 3 de las que cumplan su `condicion` (o sea, que nacen del estado real de
+# la aldea) y cuyos `sujetos` estén presentes. El papel «p» es quien viene a pedir.
+#
+#   condicion    expresión sobre el estado: grano, oro, poblacion, sin_techo, dias_comida, impuestos, tension,
+#                animo_medio, opinion_media, estacion, dia, defensa, tiene_<edificio>, esta_<vecino>,
+#                secreto_fuera_<vecino> (su secreto ya corre como rumor), ley_<clave>…
+#   sujetos      papeles → selector; una lista prueba varias opciones por orden: [clave:panadera, azar]
+#   opciones     clave, texto, pista (lo que se intuye que pasará), coste (se paga del arca), condicion
+#                (si no se cumple, la opción no aparece), efectos (los aplica el motor), resultado
+#   defecto      opción que se aplica sola si el señor deja pasar el día sin decidir
+#   enfriamiento días que tarda en poder volver a salir
+
+# --- Comida, techo y leña -----------------------------------------------------------------------------
+
+- clave: despensa_vacia
+  peso: 6
+  condicion: "dias_comida < 4 and not ley_racionamiento"
+  sujetos: {p: ["clave:panadera", "clave:viuda", azar]}
+  titulo: "La despensa suena a hueco"
+  texto: "{p} viene con las manos en los bolsillos, que es donde debería haber pan. «Señor, queda comida para {dias_comida} días mal contados. O hacéis algo vos, o lo hará el hambre.»"
+  opciones:
+    - clave: racionar
+      texto: "Racionar lo que hay"
+      pista: "La comida dura más, pero nadie os lo agradecerá."
+      efectos: [{ley: racionamiento, activa: true}, {opinion: -2, a: todos}]
+      resultado: "Se ordena racionamiento. Hay menos en el plato y más caras largas."
+    - clave: comprar
+      texto: "Comprar grano a los vecinos de la comarca"
+      pista: "Cuesta oro; llena el granero."
+      coste: {oro: 15}
+      efectos: [{recursos: {grano: 40}}, {opinion: 3, a: todos}]
+      resultado: "Se manda comprar grano a la comarca. Llega en dos carros, y con él algo de sosiego."
+    - clave: aguantar
+      texto: "«Ya escampará»"
+      pista: "No cuesta nada. De momento."
+      efectos: [{opinion: -3, a: todos}, {tension: 5}]
+      resultado: "Vuestra merced dice que ya escampará. El hambre no entiende de refranes."
+  defecto: aguantar
+  enfriamiento: 3
+
+- clave: gente_al_raso
+  peso: 5
+  condicion: "sin_techo >= 2"
+  sujetos: {p: [sin_techo, azar]}
+  titulo: "Dormir al raso"
+  texto: "{p} se planta delante con la manta al hombro. «Señor, somos {sin_techo} durmiendo junto a la lumbre como perros. ¿Para cuándo un tejado?»"
+  opciones:
+    - clave: prometer
+      texto: "Prometer casas en cinco días"
+      pista: "Os creerán. Más vale cumplir."
+      efectos:
+        - {opinion: 3, a: todos}
+        - {promesa: {clave: casas, texto: casas para todos, condicion: "sin_techo == 0", dias: 5}}
+      resultado: "Prometéis techo para todos antes de cinco días. Apuntado queda, y no solo por el escriba."
+    - clave: mantas
+      texto: "Repartir mantas y levantar un cobertizo"
+      pista: "Un apaño que cuesta madera."
+      coste: {madera: 6}
+      efectos: [{animo: 4, a: todos}, {opinion: 2, a: p}]
+      resultado: "Se reparten mantas y se arma un cobertizo. No es una casa, pero quita el relente."
+    - clave: aguantarse
+      texto: "«El relente curte»"
+      pista: "Gratis, y os saldrá caro."
+      efectos: [{opinion: -6, a: p}, {opinion: -2, a: todos}, {tension: 4}]
+      resultado: "Decís que el relente curte. Curte, sí; sobre todo el genio."
+  defecto: aguantarse
+  enfriamiento: 4
+
+- clave: falta_lena
+  peso: 5
+  condicion: "estacion == 'invierno' and madera < 8"
+  sujetos: {p: ["clave:lenador", azar]}
+  titulo: "Sin leña en pleno invierno"
+  texto: "{p} enseña el hacha y el montón de leña, que cabe en una mano. «Con esto no pasamos la semana, señor.»"
+  opciones:
+    - clave: todos_al_monte
+      texto: "Mandar a todos al monte un día"
+      pista: "Leña para días; nadie contento."
+      efectos: [{recursos: {madera: 16}}, {animo: -3, a: todos}]
+      resultado: "Un día entero de hachas y juramentos. La leñera vuelve a parecer una leñera."
+    - clave: comprar
+      texto: "Comprar leña"
+      coste: {oro: 8}
+      pista: "Cuesta oro y no cuesta sudor."
+      efectos: [{recursos: {madera: 20}}]
+      resultado: "Llega un carro de leña de la comarca. Seca, para variar."
+    - clave: nada
+      texto: "«Abrigaos más»"
+      efectos: [{opinion: -4, a: todos}, {tension: 4}]
+      resultado: "Aconsejáis abrigarse más. Se abrigan, sobre todo de vos."
+  defecto: nada
+  enfriamiento: 5
+
+- clave: sin_pozo
+  peso: 3
+  condicion: "not tiene_pozo and poblacion >= 6"
+  sujetos: {p: ["clave:curandera", "clave:viuda", azar]}
+  titulo: "Agua del río"
+  texto: "«Señor», dice {p}, «somos {poblacion} bebiendo del río donde abrevan las ovejas. Yo no digo nada, pero las tripas sí.»"
+  opciones:
+    - clave: prometer
+      texto: "Prometer un pozo en seis días"
+      pista: "Bueno para la salud y para vuestra fama, si cumplís."
+      efectos:
+        - {opinion: 2, a: todos}
+        - {promesa: {clave: pozo, texto: un pozo en la plaza, condicion: "tiene_pozo", dias: 6}}
+      resultado: "Prometéis un pozo en la plaza. Ya hay quien discute dónde."
+    - clave: nada
+      texto: "«El río lleva ahí toda la vida»"
+      efectos: [{salud: -6, a: todos}, {opinion: -2, a: todos}]
+      resultado: "El río lleva ahí toda la vida. Las fiebres, también."
+  defecto: nada
+  enfriamiento: 8
+
+- clave: ratones
+  peso: 3
+  condicion: "grano > 110 and not tiene_granero"
+  sujetos: {p: ["clave:viuda", "clave:molinero", azar]}
+  titulo: "Grano a la intemperie"
+  texto: "{p} trae un puñado de grano roído. «Mirad, señor: los ratones cobran más diezmo que vos. Sin granero, esto se pierde.»"
+  opciones:
+    - clave: prometer
+      texto: "Prometer un granero en cinco días"
+      efectos:
+        - {opinion: 2, a: p}
+        - {promesa: {clave: granero, texto: un granero como Dios manda, condicion: "tiene_granero", dias: 5}}
+      resultado: "Prometéis granero. Los ratones no han sido informados."
+    - clave: cada_uno
+      texto: "Que cada uno guarde lo suyo"
+      pista: "Se perderá algo de grano."
+      efectos: [{recursos: {grano: -12}}, {opinion: -3, a: p}]
+      resultado: "Cada uno guarda lo suyo donde puede. Los ratones, encantados con el reparto."
+  defecto: cada_uno
+  enfriamiento: 6
+
+# --- Tributos ------------------------------------------------------------------------------------------
+
+- clave: tributos_altos
+  peso: 5
+  condicion: "impuestos >= 3"
+  sujetos: {p: [mas_descontento]}
+  titulo: "Los tributos aprietan"
+  texto: "{p} no se quita el gorro. «Señor, entre lo que gano y lo que os lleváis, salgo a deber. Bajad los tributos o bajaremos nosotros los brazos.»"
+  opciones:
+    - clave: bajar
+      texto: "Bajar los tributos un grado"
+      pista: "Menos oro, más paz."
+      efectos: [{impuestos: -1}, {opinion: 5, a: todos}, {tension: -5}]
+      resultado: "Bajáis los tributos un grado. En la taberna se brinda por vos, cosa nunca vista."
+    - clave: mantener
+      texto: "Mantenerlos"
+      efectos: [{opinion: -3, a: todos}, {tension: 5}]
+      resultado: "Los tributos se quedan como están. Las caras, también."
+    - clave: callar
+      texto: "Mandarle callar"
+      pista: "Callará. Hoy."
+      efectos: [{opinion: -12, a: p}, {opinion: -3, a: todos}, {tension: 9}]
+      resultado: "Mandáis callar a {p}. Calla, pero mira; y los demás han tomado nota."
+  defecto: mantener
+  enfriamiento: 4
+
+- clave: arca_vacia
+  peso: 3
+  condicion: "impuestos == 0 and oro < 10 and dia >= 3"
+  sujetos: {p: ["clave:escriba", azar]}
+  titulo: "El arca vacía"
+  texto: "{p} abre el arca para que se vea el fondo. «Señor, sin tributos el pueblo os quiere mucho, pero con cariño no se compra ni un clavo.»"
+  opciones:
+    - clave: leve
+      texto: "Poner un tributo leve"
+      efectos: [{impuestos: 1}, {opinion: -2, a: todos}]
+      resultado: "Se pone un tributo leve. Hay suspiros, pero nadie se muere de un suspiro."
+    - clave: seguir
+      texto: "Seguir sin tributos"
+      efectos: [{opinion: 1, a: todos}]
+      resultado: "Seguís sin cobrar tributos. Sois muy querido y bastante pobre."
+  defecto: seguir
+  enfriamiento: 7
+
+# --- Pleitos entre vecinos -------------------------------------------------------------------------------
+
+- clave: harina_con_testigos
+  peso: 4
+  condicion: "esta_molinero and esta_panadera"
+  sujetos: {p: "clave:panadera", b: "clave:molinero"}
+  titulo: "La harina y la balanza"
+  texto: "{p} entra como una tormenta. «O {b} pesa la harina delante de testigos, o yo amaso con serrín, que al menos no engaña.» {b}, detrás, jura por su muela que la balanza es santa."
+  opciones:
+    - clave: panadera
+      texto: "Dar la razón a la panadera"
+      pista: "Ella, contenta; él, no."
+      efectos: [{opinion: 8, a: p}, {opinion: -10, a: b}, {relacion: [p, b], delta: -5}, {tension: 3}]
+      resultado: "Mandáis que {b} pese con testigos. {p} sale con la cabeza alta y {b} con la boca pequeña."
+    - clave: molinero
+      texto: "Dar la razón al molinero"
+      efectos: [{opinion: 8, a: b}, {opinion: -10, a: p}, {relacion: [p, b], delta: -5}, {tension: 3}]
+      resultado: "Decís que la balanza de {b} os merece confianza. {p} os mira como a una hogaza quemada."
+    - clave: pesas_del_senor
+      texto: "Pesar con las pesas del señor, en la plaza"
+      pista: "Cuesta algo, pero zanja el pleito a la vista de todos."
+      coste: {oro: 3}
+      efectos: [{opinion: 2, a: todos}, {opinion: -3, a: b}, {relacion: [p, b], delta: 6}, {tension: -6}]
+      resultado: "Se pesa en la plaza con pesas nuevas. Sale lo que sale, y por una vez nadie puede discutirlo."
+    - clave: no_meterse
+      texto: "No meterse"
+      efectos: [{opinion: -3, a: p}, {relacion: [p, b], delta: -6}, {tension: 6}]
+      resultado: "Decís que eso son cosas de vecinos. Los vecinos siguen con sus cosas, más alto."
+  defecto: no_meterse
+  enfriamiento: 9
+
+- clave: rezos_o_hierbas
+  peso: 4
+  condicion: "esta_cura and esta_curandera"
+  sujetos: {p: "clave:cura", b: "clave:curandera"}
+  titulo: "Rezos o hierbas"
+  texto: "{p} pide audiencia con mucha solemnidad. «Señor, {b} anda dando cocimientos que no están en ningún libro santo. Prohibidlos, por la salud de las almas.» {b} dice que las almas no tosen."
+  opciones:
+    - clave: prohibir
+      texto: "Prohibir los cocimientos"
+      pista: "El cura os bendecirá. Los enfermos, no tanto."
+      efectos: [{opinion: 10, a: p}, {opinion: -15, a: b}, {salud: -5, a: todos}, {relacion: [p, b], delta: -8}]
+      resultado: "Prohibís los cocimientos. {b} recoge sus hierbas sin decir palabra, que es peor."
+    - clave: defender
+      texto: "Defender a la curandera"
+      efectos: [{opinion: 10, a: b}, {opinion: -10, a: p}, {opinion: -3, a: "rasgo:devoto"}, {relacion: [p, b], delta: -5}]
+      resultado: "Decís que quien cura, cura. {p} anuncia un sermón largo para el domingo."
+    - clave: cada_uno
+      texto: "Que cada cual cure a quien se deje"
+      pista: "Ninguno gana; la aldea descansa."
+      efectos: [{opinion: -2, a: p}, {opinion: -2, a: b}, {tension: -4}]
+      resultado: "Rezos para el alma y hierbas para la tos. Los dos refunfuñan, que es señal de sentencia justa."
+  defecto: cada_uno
+  enfriamiento: 10
+
+- clave: deuda_vieja
+  peso: 4
+  condicion: ""
+  sujetos: {p: acreedor, b: deudor}
+  titulo: "Una deuda vieja"
+  texto: "{p} trae la cuenta escrita y repasada. «Señor, {b} me debe dinero desde antes de la riada. Haced justicia, que yo ya hice paciencia.» {b} mira al suelo como si allí estuviesen las monedas."
+  opciones:
+    - clave: del_arca
+      texto: "Pagar parte de la deuda del arca"
+      pista: "Quince monedas vuestras. Los dos os lo agradecerán."
+      coste: {oro: 15}
+      efectos: [{deuda: b, cantidad: -15}, {dinero: 15, a: p}, {opinion: 12, a: b}, {opinion: 6, a: p}, {relacion: [p, b], delta: 8}]
+      resultado: "Ponéis quince monedas del arca. {b} no sabe dónde meterse y {p} cuenta dos veces por si acaso."
+    - clave: a_plazos
+      texto: "Obligar a pagar a plazos"
+      efectos: [{deuda: b, cantidad: -5}, {dinero: -5, a: b}, {dinero: 5, a: p}, {opinion: -6, a: b}, {opinion: 4, a: p}]
+      resultado: "Mandáis que {b} pague cinco monedas ahora y el resto a plazos. Paga, rechinando."
+    - clave: perdonar
+      texto: "Perdonar la deuda por decreto"
+      pista: "El deudor, feliz. La acreedora no olvida."
+      efectos: [{deuda: b, cantidad: -999}, {opinion: -20, a: p}, {opinion: 10, a: b}, {opinion: -3, a: "rasgo:avaro"}, {tension: 4}]
+      resultado: "Decretáis la deuda perdonada. {p} no dice nada, y eso en {p} es una declaración de guerra."
+    - clave: largas
+      texto: "Dar largas"
+      efectos: [{opinion: -4, a: p}, {tension: 4}]
+      resultado: "Decís que lo miraréis. Llevan diez años mirándolo."
+  defecto: largas
+  enfriamiento: 8
+
+- clave: el_forastero
+  peso: 3
+  condicion: "esta_forastero and esta_viuda and not bandera_forastero_aceptado"
+  sujetos: {p: "clave:viuda", b: "clave:forastero"}
+  titulo: "Un forastero con bolsa llena"
+  texto: "«Señor», dice {p}, «ese {b_nombre} no tiene apellido, ni oficio, ni prisa. O dice a qué ha venido o que siga camino.» {b} espera fuera, muy tranquilo."
+  opciones:
+    - clave: se_queda
+      texto: "Que se quede"
+      efectos: [{opinion: 12, a: b}, {opinion: -8, a: p}, {opinion: -2, a: "rasgo:desconfiado"}, {bandera: forastero_aceptado}]
+      resultado: "Decís que en la aldea cabe quien arrime el hombro. {b} se quita el sombrero; {p}, las ganas de saludaros."
+    - clave: se_va
+      texto: "Que siga su camino"
+      pista: "Se irá, y con él lo que vino a buscar."
+      efectos: [{expulsar: b}, {opinion: 8, a: p}, {opinion: -6, a: "clave:tabernero"}, {tension: 4}]
+      resultado: "{b_nombre} recoge su hatillo sin protestar y toma el camino. Hay quien respira y hay quien se queda con la pregunta."
+    - clave: a_prueba
+      texto: "Ponerlo a prueba un mes"
+      efectos: [{opinion: 3, a: b}, {opinion: 2, a: p}, {tension: 2}, {bandera: forastero_aceptado, dias: 30}]
+      resultado: "Un mes de prueba. El forastero asiente; doña Aldonza empieza a contar los días."
+  defecto: a_prueba
+  enfriamiento: 12
+
+# --- Los vecinos piden lo suyo -----------------------------------------------------------------------------
+
+- clave: iglesia_y_campana
+  peso: 3
+  condicion: "esta_cura and not tiene_iglesia"
+  sujetos: {p: "clave:cura"}
+  titulo: "Una iglesia como Dios manda"
+  texto: "{p} carraspea. «Señor, decir misa junto a la hoguera tiene su aquel, pero el humo me espanta a los fieles. ¿Para cuándo una iglesia? Con campana, a ser posible.»"
+  opciones:
+    - clave: prometer
+      texto: "Prometer la iglesia en diez días"
+      efectos:
+        - {opinion: 8, a: p}
+        - {opinion: 2, a: "rasgo:devoto"}
+        - {promesa: {clave: iglesia, texto: una iglesia, condicion: "tiene_iglesia", dias: 10}}
+      resultado: "Prometéis iglesia. {p} ya anda midiendo el claro a zancadas."
+    - clave: mas_adelante
+      texto: "«Más adelante»"
+      efectos: [{opinion: -5, a: p}]
+      resultado: "Más adelante, decís. {p} lo ofrece como penitencia, la vuestra."
+    - clave: al_raso
+      texto: "«Dios está en todas partes: rezad al raso»"
+      efectos: [{opinion: -10, a: p}, {opinion: -4, a: "rasgo:devoto"}, {opinion: 2, a: "clave:curandera"}]
+      resultado: "Recordáis que Dios está en todas partes. {p} responde que el reuma también."
+  defecto: mas_adelante
+  enfriamiento: 12
+
+- clave: taberna
+  peso: 3
+  condicion: "esta_tabernero and not tiene_taberna"
+  sujetos: {p: "clave:tabernero"}
+  titulo: "Un tabernero sin taberna"
+  texto: "{p} abre los brazos. «Señor, un tabernero sin taberna es como un cura sin iglesia, pero con más sed. Dadme cuatro paredes y os daré una aldea contenta.»"
+  opciones:
+    - clave: prometer
+      texto: "Prometer taberna en ocho días"
+      efectos:
+        - {opinion: 8, a: p}
+        - {animo: 1, a: todos}
+        - {promesa: {clave: taberna, texto: una taberna, condicion: "tiene_taberna", dias: 8}}
+      resultado: "Prometéis taberna. La noticia corre más que el vino."
+    - clave: junto_al_fuego
+      texto: "Que despache junto a la hoguera"
+      coste: {madera: 5}
+      efectos: [{animo: 2, a: todos}, {opinion: 3, a: p}]
+      resultado: "Se arma un mostrador con cuatro tablas junto a la lumbre. {p} lo llama «la sucursal»."
+    - clave: agua
+      texto: "«Bebed agua»"
+      efectos: [{opinion: -8, a: p}, {animo: -2, a: todos}]
+      resultado: "Recomendáis agua. Nadie os ha contestado, por respeto."
+  defecto: agua
+  enfriamiento: 10
+
+- clave: el_mozo_quiere_oficio
+  peso: 3
+  condicion: "esta_mozo and dia >= 4 and not bandera_mozo_aprendiz"
+  sujetos: {p: "clave:mozo"}
+  titulo: "El mozo quiere oficio"
+  texto: "{p} se ha lavado la cara para venir. «Señor, no quiero ser “el mozo” toda la vida. Ponedme de aprendiz con alguien. Aprendo rápido. Demasiado, dicen.»"
+  opciones:
+    - clave: herrero
+      texto: "Aprendiz del herrero"
+      condicion: "esta_herrero"
+      efectos: [{opinion: 10, a: p}, {relacion: [p, "clave:herrero"], delta: 15}, {animo: 6, a: p}, {bandera: mozo_aprendiz}]
+      resultado: "{p} entra de aprendiz en la fragua. El primer día ya se ha quemado dos veces y está encantado."
+    - clave: escriba
+      texto: "Aprendiz del escriba"
+      condicion: "esta_escriba"
+      efectos: [{opinion: 8, a: p}, {opinion: -3, a: "clave:escriba"}, {relacion: [p, "clave:escriba"], delta: 10}, {animo: 5, a: p}, {bandera: mozo_aprendiz}]
+      resultado: "{p} entra de aprendiz del escriba, que no sabe si alegrarse o esconder los papeles."
+    - clave: pastor
+      texto: "Que ayude al pastor"
+      condicion: "esta_pastor"
+      efectos: [{opinion: 5, a: p}, {relacion: [p, "clave:pastor"], delta: 10}, {animo: 3, a: p}, {bandera: mozo_aprendiz}]
+      resultado: "{p} ayudará con el rebaño. Ya distingue a la Rubia, que es más de lo que consigue media aldea."
+    - clave: recadero
+      texto: "Que siga de recadero"
+      efectos: [{opinion: -8, a: p}, {animo: -5, a: p}]
+      resultado: "{p} sigue de recadero. Corre igual de rápido, pero ahora corre enfadado."
+  defecto: recadero
+  enfriamiento: 15
+
+- clave: fiesta
+  peso: 3
+  condicion: "animo_medio < 45 and grano >= 40 and not revuelta"
+  sujetos: {p: ["clave:pastor", "clave:tabernero", azar]}
+  titulo: "Hace falta una fiesta"
+  texto: "{p} lo suelta sin rodeos. «Señor, la gente anda con el alma por los suelos. Una fiesta, aunque sea pequeña: un poco de pan de más, algo de música y permiso para no madrugar.»"
+  opciones:
+    - clave: fiesta
+      texto: "Dar una fiesta"
+      pista: "Cuesta grano y oro; levanta el ánimo y baja los humos."
+      coste: {grano: 20, oro: 5}
+      efectos: [{animo: 10, a: todos}, {opinion: 4, a: todos}, {tension: -8}, {bandera: fiesta, valor: la fiesta del señor, dias: 1}]
+      resultado: "Hay fiesta. Se come, se canta y se baila mal pero con ganas. Mañana nadie madrugará."
+    - clave: negarse
+      texto: "«No está el horno para bollos»"
+      efectos: [{animo: -2, a: todos}, {opinion: -2, a: todos}]
+      resultado: "Decís que no está el horno para bollos. La panadera opina que el horno está perfectamente."
+  defecto: negarse
+  enfriamiento: 9
+
+- clave: tinta_y_pergamino
+  peso: 2
+  condicion: "esta_escriba and oro >= 6 and dia >= 5"
+  sujetos: {p: "clave:escriba"}
+  titulo: "Tinta y pergamino"
+  texto: "{p} enseña el tintero vacío. «Señor, con el debido respeto: si queréis que la posteridad sepa de vuestras hazañas, la posteridad necesita tinta.»"
+  opciones:
+    - clave: comprar
+      texto: "Comprarle tinta y pergamino"
+      coste: {oro: 4}
+      efectos: [{opinion: 7, a: p}, {animo: 3, a: p}]
+      resultado: "Tinta nueva y pergamino del bueno. {p} promete una crónica a la altura. No dice a la altura de qué."
+    - clave: carbon
+      texto: "«Escribid con carbón»"
+      efectos: [{opinion: -5, a: p}]
+      resultado: "Sugerís carbón. {p} toma nota. Con carbón."
+  defecto: carbon
+  enfriamiento: 14
+
+- clave: huellas
+  peso: 3
+  condicion: "defensa < 5 and dia >= 6 and poblacion >= 6 and not ley_leva"
+  sujetos: {p: ["clave:pastor", "clave:herrero", azar]}
+  titulo: "Huellas en el barro"
+  texto: "{p} trae barro hasta las rodillas. «Señor, he visto huellas junto al río. De lobo, o de gente que no saluda. Aquí no hay ni una mala empalizada.»"
+  opciones:
+    - clave: rondas
+      texto: "Organizar rondas de guardia"
+      pista: "Más defensa, menos brazos."
+      efectos: [{ley: leva, activa: true}, {opinion: 3, a: "rasgo:miedoso"}]
+      resultado: "Se organizan rondas. Todo el mundo vigila, sobre todo a quien le toca vigilar mañana."
+    - clave: prometer
+      texto: "Prometer una torre de guardia en ocho días"
+      efectos:
+        - {opinion: 2, a: todos}
+        - {promesa: {clave: torre, texto: una torre de guardia, condicion: "tiene_torre_guardia", dias: 8}}
+      resultado: "Prometéis una torre. El herrero dice que hará falta herrería; lo dice mucho."
+    - clave: nada
+      texto: "«Serán los perros»"
+      efectos: [{opinion: -5, a: "rasgo:miedoso"}, {opinion: -1, a: todos}]
+      resultado: "Decís que serán los perros. Aquí no hay perros, pero nadie os lo discute a la cara."
+  defecto: nada
+  enfriamiento: 8
+
+# --- Cuando un secreto ya corre de boca en boca ---------------------------------------------------------
+
+- clave: boda
+  peso: 5
+  condicion: "secreto_fuera_lenador and esta_lenador and esta_panadera and not bandera_amor_publico"
+  sujetos: {p: "clave:lenador", b: "clave:panadera"}
+  titulo: "Permiso para casarse"
+  texto: "{p} entra con el gorro en la mano y {b} con harina hasta las cejas. Él no arranca; ella sí. «Señor, ya lo sabe todo el pozo, así que mejor que lo sepáis por nosotros: queremos casarnos.»"
+  opciones:
+    - clave: bendecir
+      texto: "Bendecir la boda y pagar el convite"
+      pista: "Cuesta grano; la aldea entera lo celebrará. Casi entera."
+      coste: {grano: 15}
+      efectos: [{animo: 8, a: todos}, {opinion: 15, a: p}, {opinion: 15, a: b}, {relacion: [p, b], delta: 20}, {opinion: -5, a: "clave:molinero"}, {tension: -6}, {bandera: amor_publico}, {bandera: fiesta, valor: la boda, dias: 1}]
+      resultado: "Hay boda. {p} dice «sí» más alto de lo que ha hablado en diez años. El molinero brinda con la boca torcida."
+    - clave: esperar
+      texto: "«Esperad a la primavera»"
+      efectos: [{opinion: -6, a: p}, {opinion: -6, a: b}]
+      resultado: "Mandáis esperar a la primavera. Ellos llevan esperando desde Vilavella."
+    - clave: prohibir
+      texto: "Prohibirlo"
+      pista: "Podéis. No deberíais."
+      efectos: [{opinion: -22, a: p}, {opinion: -22, a: b}, {opinion: -4, a: todos}, {tension: 10}]
+      resultado: "Lo prohibís. {b} sale sin hacer reverencia y {p} cierra la puerta despacio, que es peor que un portazo."
+  defecto: esperar
+  enfriamiento: 14
+
+- clave: la_maquila
+  peso: 5
+  condicion: "secreto_fuera_molinero and esta_molinero and esta_viuda"
+  sujetos: {p: "clave:viuda", b: "clave:molinero"}
+  titulo: "La vara de las muescas"
+  texto: "{p} deja sobre la mesa una vara llena de muescas. «Cada muesca, un puñado de mi grano. Lo sabe media aldea y ahora lo sabéis vos. ¿Qué pensáis hacer con {b}?»"
+  opciones:
+    - clave: multa
+      texto: "Multar al molinero"
+      efectos: [{dinero: -10, a: b}, {recursos: {oro: 10}}, {opinion: -12, a: b}, {opinion: 8, a: p}, {opinion: 2, a: todos}]
+      resultado: "Diez monedas de multa. {b} las paga contándolas despacio, como quien se despide de familia."
+    - clave: pesas
+      texto: "Poner pesas del señor en el molino"
+      coste: {oro: 5}
+      efectos: [{opinion: -4, a: b}, {opinion: 5, a: p}, {opinion: 3, a: todos}, {tension: -6}]
+      resultado: "Desde hoy en el molino se pesa con pesas selladas. La muela suena igual, pero la gente la oye distinto."
+    - clave: mirar_a_otro_lado
+      texto: "Mirar a otro lado"
+      efectos: [{opinion: -8, a: p}, {opinion: -2, a: todos}, {opinion: 4, a: b}, {tension: 5}]
+      resultado: "Decís que son habladurías. {b} respira; el resto de la aldea toma nota de cómo se hace justicia aquí."
+  defecto: mirar_a_otro_lado
+  enfriamiento: 20
+
+- clave: el_martillo
+  peso: 5
+  condicion: "secreto_fuera_herrero and esta_herrero and esta_mozo"
+  sujetos: {p: "clave:mozo", b: "clave:herrero"}
+  titulo: "Las herramientas del padre"
+  texto: "{p} no llora porque ha decidido que no. «Señor, las herramientas de mi padre no se las llevó la riada. Las tiene {b}. Yo solo quiero lo que es mío.» {b} no levanta la vista."
+  opciones:
+    - clave: devolver
+      texto: "Que el herrero las devuelva"
+      efectos: [{opinion: 15, a: p}, {opinion: -6, a: b}, {relacion: [p, b], delta: 12}, {animo: 8, a: p}, {tension: -4}]
+      resultado: "{b} devuelve las herramientas una a una, limpias y engrasadas. «Las cuidé», dice. Es lo más parecido a pedir perdón que le sale."
+    - clave: rescate
+      texto: "Pagar del arca lo que se empeñó"
+      coste: {oro: 10}
+      efectos: [{opinion: 10, a: p}, {opinion: 10, a: b}, {relacion: [p, b], delta: 15}, {deuda: b, cantidad: -5}]
+      resultado: "Pagáis el empeño. {p} recupera el martillo y {b} recupera un poco de vergüenza, que le hacía falta."
+    - clave: riada
+      texto: "«Cosas de la riada»"
+      efectos: [{opinion: -18, a: p}, {animo: -8, a: p}, {opinion: -3, a: todos}, {tension: 6}]
+      resultado: "Decís que la riada se llevó muchas cosas. {p} se va sin contestar. Alguien debería vigilar a ese chico."
+  defecto: riada
+  enfriamiento: 20
+
+- clave: las_limosnas
+  peso: 4
+  condicion: "secreto_fuera_cura and esta_cura and esta_tabernero"
+  sujetos: {p: ["clave:viuda", azar], a: "clave:cura", b: "clave:tabernero"}
+  titulo: "Las limosnas de la campana"
+  texto: "{p} lo pregunta delante de todos: «¿Dónde están las limosnas de la campana?» {a} mira al cielo. {b} mira su cajón."
+  opciones:
+    - clave: devolver
+      texto: "Que el tabernero las devuelva"
+      efectos: [{dinero: -8, a: b}, {opinion: -10, a: b}, {opinion: 4, a: a}, {opinion: 3, a: "rasgo:devoto"}, {relacion: [a, b], delta: -10}]
+      resultado: "{b} devuelve las monedas refunfuñando que las ganó limpiamente. {a} promete no volver a tocar un naipe. Hasta Pascua."
+    - clave: penitencia
+      texto: "Penitencia pública para el cura"
+      pista: "La aldea se reirá un rato, que también es salud."
+      efectos: [{opinion: -8, a: a}, {animo: 3, a: todos}, {tension: -3}]
+      resultado: "{a} barre la plaza una semana entera. Nunca tuvo tanto público ni un sermón tan corto."
+    - clave: perdonar
+      texto: "Perdonar y callar"
+      efectos: [{opinion: 10, a: a}, {opinion: -4, a: "rasgo:devoto"}, {opinion: -3, a: p}]
+      resultado: "Decís que quien esté libre de naipes tire la primera piedra. {a} os bendice tres veces."
+  defecto: perdonar
+  enfriamiento: 20
+
+- clave: el_huerto_arrasado
+  peso: 4
+  condicion: "secreto_fuera_pastor and esta_pastor and esta_curandera"
+  sujetos: {p: "clave:curandera", b: "clave:pastor"}
+  titulo: "Jabalíes que balan"
+  texto: "{p} trae un mechón de lana en la mano. «Señor, mis hierbas tardaron tres años en criarse y una noche en desaparecer. No quiero castigo para {b}. Quiero mi huerto.»"
+  opciones:
+    - clave: compensar
+      texto: "Que el pastor la compense con queso y lana"
+      efectos: [{dinero: -4, a: b}, {dinero: 4, a: p}, {relacion: [p, b], delta: 10}, {opinion: 5, a: p}, {opinion: -2, a: b}]
+      resultado: "{b} pagará en queso y lana, y además cavará el huerto nuevo. Lo acepta casi con alivio."
+    - clave: del_arca
+      texto: "Pagar el huerto del arca"
+      coste: {oro: 6}
+      efectos: [{opinion: 6, a: p}, {opinion: 6, a: b}, {relacion: [p, b], delta: 6}]
+      resultado: "Pagáis semillas y esquejes. {p} dice que el señor tiene mejor mano para las plantas que para los tributos."
+    - clave: nada
+      texto: "«Las ovejas son así»"
+      efectos: [{opinion: -10, a: p}, {salud: -3, a: todos}, {tension: 4}]
+      resultado: "Decís que las ovejas son así. {p} se guarda la lana y los remedios."
+  defecto: nada
+  enfriamiento: 20
+
+- clave: los_marcos
+  peso: 4
+  condicion: "secreto_fuera_viuda and esta_viuda and esta_pastor"
+  sujetos: {p: "clave:pastor", b: "clave:viuda"}
+  titulo: "Los marcos del prado"
+  texto: "{p} ha medido el prado a pasos tres veces. «Señor, a mí las cuentas no se me dan, pero el prado era más ancho. Que venga alguien y lo mida con cuerda.» {b} dice que la tierra encoge con los años, como las personas."
+  opciones:
+    - clave: medir
+      texto: "Medir con cuerda y devolver lo que falte"
+      efectos: [{opinion: -15, a: b}, {opinion: 12, a: p}, {opinion: 3, a: todos}, {relacion: [p, b], delta: -5}]
+      resultado: "Se mide con cuerda y testigos. Faltaban tres varas. Los marcos vuelven a su sitio y {b} a su casa, sin despedirse."
+    - clave: partir
+      texto: "Partir la diferencia"
+      efectos: [{opinion: -3, a: b}, {opinion: -3, a: p}, {relacion: [p, b], delta: 4}, {tension: -4}]
+      resultado: "Vara y media para cada uno. Ninguno está contento, que suele ser señal de buen arreglo."
+    - clave: dejarlo
+      texto: "Dejarlo como está"
+      efectos: [{opinion: -12, a: p}, {opinion: 5, a: b}, {tension: 5}]
+      resultado: "Decís que los marcos están donde están. {p} asiente despacio. Las ovejas, por si acaso, pastan ya del otro lado."
+  defecto: dejarlo
+  enfriamiento: 20
+
+
+# --- Menudencias de cada día (siempre hay alguna: vecinos de verdad con sus cosas) ------------------------
+
+- clave: sitio_junto_al_fuego
+  peso: 1.5
+  condicion: "poblacion >= 2"
+  sujetos: {p: azar, b: azar}
+  titulo: "El sitio junto a la lumbre"
+  texto: "{p} y {b} llegan discutiendo. Los dos dicen que el mejor sitio junto a la lumbre es suyo «de toda la vida», y la aldea tiene cuatro días. Quieren que sentenciéis vos."
+  opciones:
+    - clave: primero
+      texto: "El sitio es de {p}"
+      efectos: [{opinion: 4, a: p}, {opinion: -4, a: b}, {relacion: [p, b], delta: -4}]
+      resultado: "El sitio es de {p}. {b} se sienta enfrente y le echa el humo."
+    - clave: segundo
+      texto: "El sitio es de {b}"
+      efectos: [{opinion: 4, a: b}, {opinion: -4, a: p}, {relacion: [p, b], delta: -4}]
+      resultado: "El sitio es de {b}. {p} dice que tampoco calentaba tanto."
+    - clave: turnos
+      texto: "Por turnos, y el que proteste friega"
+      pista: "Salomónico. A nadie le gusta Salomón."
+      efectos: [{opinion: -1, a: p}, {opinion: -1, a: b}, {relacion: [p, b], delta: 3}, {tension: -2}]
+      resultado: "Por turnos. Se pasan la tarde vigilándose el uno al otro, que es otra manera de hacerse compañía."
+  defecto: turnos
+  enfriamiento: 6
+
+- clave: herramienta_prestada
+  peso: 1.5
+  condicion: "poblacion >= 2"
+  sujetos: {p: azar, b: azar}
+  titulo: "Una azada que no vuelve"
+  texto: "«Señor», dice {p}, «le presté la azada a {b} por san Miguel y aún la estoy esperando.» {b} asegura que se la devolvió, o que se la iba a devolver, que viene a ser lo mismo."
+  opciones:
+    - clave: devolver
+      texto: "Que la devuelva hoy mismo"
+      efectos: [{opinion: 4, a: p}, {opinion: -3, a: b}, {relacion: [p, b], delta: 2}]
+      resultado: "La azada vuelve a casa antes de la noche, con el mango nuevo. Algo es algo."
+    - clave: comprar
+      texto: "Pagar una azada nueva del arca"
+      coste: {oro: 2}
+      efectos: [{opinion: 3, a: p}, {opinion: 3, a: b}, {relacion: [p, b], delta: 4}]
+      resultado: "Compráis una azada nueva. Ahora hay dos y los dos quieren la nueva."
+    - clave: arreglaos
+      texto: "«Arreglaos entre vosotros»"
+      efectos: [{opinion: -2, a: p}, {relacion: [p, b], delta: -5}, {tension: 3}]
+      resultado: "Les decís que se arreglen. Se arreglan a voces, que es como se arregla aquí todo."
+  defecto: arreglaos
+  enfriamiento: 7
+
+- clave: regalo_al_senor
+  peso: 1.5
+  condicion: "poblacion >= 2"
+  sujetos: {p: mas_contento}
+  titulo: "Un presente"
+  texto: "{p} os trae algo envuelto en un paño: lo mejor que tiene, dice, «por lo que hacéis por la aldea». Media aldea mira a ver qué hacéis con ello."
+  opciones:
+    - clave: aceptar
+      texto: "Aceptarlo con buenas palabras"
+      efectos: [{opinion: 5, a: p}, {animo: 3, a: p}, {recursos: {pan: 2}}]
+      resultado: "Lo aceptáis y lo alabáis delante de todos. {p} se va más ancho que largo."
+    - clave: corresponder
+      texto: "Aceptarlo y corresponder con unas monedas"
+      coste: {oro: 3}
+      efectos: [{opinion: 8, a: p}, {dinero: 3, a: p}, {opinion: 1, a: todos}, {recursos: {pan: 2}}]
+      resultado: "Aceptáis y correspondéis. Se comenta en el pozo que el señor es agradecido, cosa rara en un señor."
+    - clave: rechazar
+      texto: "Rechazarlo: «No hace falta»"
+      efectos: [{opinion: -6, a: p}, {animo: -3, a: p}]
+      resultado: "Decís que no hace falta. {p} se lo lleva de vuelta, y con ello algo de buena voluntad."
+  defecto: aceptar
+  enfriamiento: 10
+
+- clave: ronquidos
+  peso: 1
+  condicion: "poblacion >= 3"
+  sujetos: {p: azar, b: azar}
+  titulo: "Noches en vela"
+  texto: "{p} trae ojeras hasta el ombligo. «Señor, {b} ronca como una muela de molino. O duerme en otra parte o no respondo de mí.»"
+  opciones:
+    - clave: mudar
+      texto: "Que {b} duerma en otra parte"
+      efectos: [{opinion: 4, a: p}, {opinion: -4, a: b}, {animo: 2, a: p}]
+      resultado: "{b} se muda de rincón con mucha dignidad y la manta al hombro."
+    - clave: cera
+      texto: "Tapones de cera para todos"
+      coste: {oro: 1}
+      efectos: [{animo: 2, a: p}, {relacion: [p, b], delta: 3}, {opinion: 2, a: p}]
+      resultado: "Repartís cera para los oídos. La aldea duerme, y por una vez nadie se entera de nada."
+    - clave: aguantar
+      texto: "«Quien ronca, descansa»"
+      efectos: [{opinion: -3, a: p}, {animo: -3, a: p}, {relacion: [p, b], delta: -4}]
+      resultado: "Decís que quien ronca, descansa. {p} os desea que descanséis vos así de bien."
+  defecto: aguantar
+  enfriamiento: 9
+
+- clave: nombre_de_la_plaza
+  peso: 1
+  condicion: "poblacion >= 5 and not bandera_plaza_con_nombre"
+  sujetos: {p: ["clave:escriba", azar], b: azar}
+  titulo: "Un nombre para la plaza"
+  texto: "{p} dice que una aldea seria necesita una plaza con nombre, para ponerla en los papeles. {b} propone llamarla «la del Barro», que es lo que hay."
+  opciones:
+    - clave: del_senor
+      texto: "Plaza del Señor"
+      pista: "Modesto no es."
+      efectos: [{opinion: -2, a: todos}, {opinion: 2, a: p}, {bandera: plaza_con_nombre, valor: Plaza del Señor}]
+      resultado: "Se llamará plaza del Señor. La gente la llama así delante de vos y «la del Barro» el resto del tiempo."
+    - clave: vilavella
+      texto: "Plaza de Vilavella, por la aldea vieja"
+      efectos: [{opinion: 3, a: todos}, {animo: 2, a: todos}, {bandera: plaza_con_nombre, valor: Plaza de Vilavella}]
+      resultado: "Plaza de Vilavella. Más de uno se ha sonado la nariz, por el relente."
+    - clave: del_barro
+      texto: "Plaza del Barro, que es lo que hay"
+      efectos: [{opinion: 2, a: b}, {animo: 1, a: todos}, {opinion: -2, a: p}, {bandera: plaza_con_nombre, valor: Plaza del Barro}]
+      resultado: "Plaza del Barro, con todas las letras. El escriba lo apunta con cara de sufrimiento."
+  defecto: del_barro
+  enfriamiento: 999

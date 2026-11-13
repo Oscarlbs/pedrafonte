@@ -1,0 +1,37 @@
+# Números de la economía. Editable. El motor los lee al arrancar.
+
+# Con qué empieza una aldea (se multiplica por la dificultad).
+inicio: {grano: 70, madera: 45, piedra: 18, oro: 20, harina: 0, pan: 12}
+
+# Cuánto rinden los campos según la estación (edificios con `estacional: true`).
+estaciones: {primavera: 0.7, verano: 1.5, otono: 1.0, invierno: 0.4}
+
+# Cómo afecta el tiempo del día a los campos.
+clima: {despejado: 1.0, nubes: 1.0, lluvia: 1.1, niebla: 0.95, tormenta: 0.8, nieve: 0.6}
+
+# Comida: una ración por vecino y día. Una ración es 1 pan, o 1,5 de grano si no hay pan.
+grano_por_racion: 1.5
+
+# Quien trabaja fuera de su oficio rinde menos.
+rendimiento_sin_oficio: 0.6
+
+# Leña: en invierno se quema 1 de madera por cada 4 vecinos y día.
+vecinos_por_lena: 4
+
+# Sin granero, cada día se pierde este tanto del grano que pase de 60.
+merma_sin_granero: 0.03
+grano_seguro: 60
+
+# Jornales (monedas al día que gana cada vecino) e impuestos (parte del jornal que va al señor).
+jornal: {con_oficio: 3, sin_oficio: 2, sin_trabajo: 1}
+impuestos:
+  nombres: [Ninguno, Leve, Justo, Gravoso, Abusivo]
+  parte: [0.0, 0.15, 0.3, 0.5, 0.7]
+  animo: [3, 0, -2, -6, -12]
+  opinion: [8, 3, 0, -10, -22]
+
+# Llegada de vecinos nuevos: hace falta plaza libre, comida para estos días y este ánimo medio.
+llegadas: {dias_comida: 3, animo_minimo: 35, probabilidad_inmigrante: 0.35}
+
+# Hambre: días seguidos sin comer para que un vecino se marche (volverá si mejora la cosa).
+dias_hambre_para_marchar: 5

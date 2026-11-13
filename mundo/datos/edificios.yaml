@@ -1,0 +1,352 @@
+# Catálogo de edificios de Pedrafonte. Editable.
+#
+# Cada entrada:
+#   clave        identificador (no cambiar una vez usado en una partida)
+#   nombre       como se ve en el juego
+#   categoria    vivienda | produccion | servicio | defensa | camino | adorno
+#   tam          [ancho, fondo] en celdas de 2 m
+#   coste        recursos que se pagan al construir (grano, madera, piedra, oro)
+#   requisitos   poblacion: mínimo de vecinos · edificios: [claves que deben existir] ·
+#                terreno: orilla (al menos una celda en la orilla del río) · unico: true (solo uno)
+#   efecto       vivienda: plazas · trabajadores: cuántos necesita · oficios: [los que rinden al 100 %] ·
+#                produce / consume: por día con un trabajador del oficio · estacional: true (×estación) ·
+#                comida_extra: raciones diarias que ahorra · animo / salud / defensa / autoridad: puntos ·
+#                oro_dia: oro diario · almacen: evita que el grano se pierda · arrastre: true (se pinta en fila) ·
+#                tropas: hombres de armas que caben (guerra.yaml)
+#   modelo       constructor 3D que usa el juego (juego/src/escena/edificios.ts)
+#   descripcion  texto del menú, con su retranca
+
+- clave: choza
+  nombre: Choza
+  categoria: vivienda
+  tam: [3, 3]
+  coste: {madera: 8}
+  efecto: {vivienda: 2}
+  modelo: choza
+  descripcion: Cuatro palos y un tejado. Gotea, pero poco.
+
+- clave: casa
+  nombre: Casa de entramado
+  categoria: vivienda
+  tam: [3, 3]
+  coste: {madera: 16, piedra: 4}
+  efecto: {vivienda: 4, animo: 1}
+  modelo: casa
+  descripcion: Rechoncha, de vigas vistas y paja nueva. Cabe una familia y sus discusiones.
+
+- clave: casa_grande
+  nombre: Casa grande
+  categoria: vivienda
+  tam: [4, 3]
+  coste: {madera: 26, piedra: 10, oro: 5}
+  requisitos: {poblacion: 8}
+  efecto: {vivienda: 6, animo: 1}
+  modelo: casa_grande
+  descripcion: Dos alturas y chimenea de piedra. Los vecinos dirán que es presumir.
+
+- clave: casa_senor
+  nombre: Casona del señor
+  categoria: vivienda
+  tam: [5, 4]
+  coste: {madera: 30, piedra: 20}
+  requisitos: {unico: true}
+  efecto: {autoridad: 10, animo: 1}
+  modelo: casona
+  descripcion: Vuestra casa. Con balcón, para saludar o para que os vean ceñudo.
+
+- clave: hoguera
+  nombre: Hoguera
+  categoria: servicio
+  tam: [2, 2]
+  coste: {madera: 2}
+  efecto: {animo: 1, calor: true}
+  modelo: hoguera
+  descripcion: Donde se calientan las manos y las lenguas.
+
+- clave: pozo
+  nombre: Pozo
+  categoria: servicio
+  tam: [2, 2]
+  coste: {piedra: 8}
+  efecto: {salud: 2, animo: 1}
+  modelo: pozo
+  descripcion: Agua fresca y el mejor sitio para enterarse de todo.
+
+- clave: campo
+  nombre: Campo de trigo
+  categoria: produccion
+  tam: [4, 4]
+  coste: {madera: 2}
+  efecto: {trabajadores: 1, oficios: [viuda, mozo, labrador], produce: {grano: 6}, estacional: true}
+  modelo: campo
+  descripcion: Se siembra en primavera, se siega en verano y se mira con preocupación el resto del año.
+
+- clave: huerto
+  nombre: Huerto
+  categoria: produccion
+  tam: [3, 3]
+  coste: {madera: 3}
+  efecto: {comida_extra: 2, animo: 1, invierno_parado: true}
+  modelo: huerto
+  descripcion: Berzas, nabos y grelos. En invierno, solo esperanza.
+
+- clave: gallinero
+  nombre: Gallinero
+  categoria: produccion
+  tam: [2, 2]
+  coste: {madera: 5, grano: 3}
+  efecto: {comida_extra: 2}
+  modelo: gallinero
+  descripcion: Huevos a diario y un gallo que no respeta a nadie.
+
+- clave: redil
+  nombre: Redil de ovejas
+  categoria: produccion
+  tam: [4, 3]
+  coste: {madera: 10}
+  efecto: {trabajadores: 1, oficios: [pastor], comida_extra: 1, oro_dia: 2}
+  modelo: redil
+  descripcion: Lana, queso y balidos. El lobo también sabe dónde está.
+
+- clave: cabana_lenador
+  nombre: Cabaña del leñador
+  categoria: produccion
+  tam: [3, 3]
+  coste: {madera: 6}
+  efecto: {trabajadores: 1, oficios: [lenador], produce: {madera: 5}}
+  modelo: cabana_lenador
+  descripcion: Hachas, serrín y troncos apilados con mucho orgullo.
+
+- clave: cantera
+  nombre: Cantera
+  categoria: produccion
+  tam: [4, 3]
+  coste: {madera: 10}
+  efecto: {trabajadores: 1, oficios: [cantero, mozo, forastero], produce: {piedra: 4}}
+  modelo: cantera
+  descripcion: Piedra buena del país. Se saca a golpes y a juramentos.
+
+- clave: molino
+  nombre: Molino de agua
+  categoria: produccion
+  tam: [4, 4]
+  coste: {madera: 20, piedra: 15}
+  requisitos: {terreno: orilla}
+  efecto: {trabajadores: 1, oficios: [molinero], consume: {grano: 8}, produce: {harina: 8}}
+  modelo: molino
+  descripcion: La rueda gira, la muela canta y el molinero se queda su maquila.
+
+- clave: panaderia
+  nombre: Panadería
+  categoria: produccion
+  tam: [3, 3]
+  coste: {madera: 14, piedra: 10}
+  requisitos: {edificios: [molino]}
+  efecto: {trabajadores: 1, oficios: [panadera], consume: {harina: 6, madera: 1}, produce: {pan: 10}}
+  modelo: panaderia
+  descripcion: Huele a hogaza desde antes del alba. Media aldea madruga solo por eso.
+
+- clave: granero
+  nombre: Granero
+  categoria: servicio
+  tam: [3, 4]
+  coste: {madera: 18, piedra: 4}
+  efecto: {almacen: true}
+  modelo: granero
+  descripcion: Sobre pilares, para que los ratones tengan que esforzarse.
+
+- clave: herreria
+  nombre: Herrería
+  categoria: produccion
+  tam: [3, 3]
+  coste: {madera: 14, piedra: 14}
+  efecto: {trabajadores: 1, oficios: [herrero], consume: {madera: 1}, herramientas: 0.15}
+  modelo: herreria
+  descripcion: Con buenas herramientas todo rinde más. Con el herrero de mal humor, menos.
+
+- clave: taberna
+  nombre: Taberna
+  categoria: servicio
+  tam: [4, 3]
+  coste: {madera: 20, piedra: 8}
+  efecto: {trabajadores: 1, oficios: [tabernero], consume: {grano: 2}, animo: 3, oro_dia: 2}
+  modelo: taberna
+  descripcion: Vino aguado, verdades enteras. Aquí nacen los rumores y aquí engordan.
+
+- clave: iglesia
+  nombre: Iglesia
+  categoria: servicio
+  tam: [4, 5]
+  coste: {madera: 20, piedra: 30, oro: 10}
+  requisitos: {poblacion: 8, unico: true}
+  efecto: {trabajadores: 1, oficios: [cura], animo: 2, calma: 5}
+  modelo: iglesia
+  descripcion: Campana, sermón y un tejado que siempre pide limosna.
+
+- clave: escribania
+  nombre: Escribanía
+  categoria: servicio
+  tam: [3, 3]
+  coste: {madera: 12, piedra: 6}
+  requisitos: {unico: true}
+  efecto: {trabajadores: 1, oficios: [escriba], recaudacion: 0.25}
+  modelo: escribania
+  descripcion: Tinta, legajos y cuentas claras. Lo que aquí se apunta, apuntado queda.
+
+- clave: botica
+  nombre: Casa de la curandera
+  categoria: servicio
+  tam: [3, 3]
+  coste: {madera: 12, piedra: 4}
+  requisitos: {unico: true}
+  efecto: {trabajadores: 1, oficios: [curandera], salud: 5}
+  modelo: botica
+  descripcion: Hierbas colgadas, ungüentos y un gato que os mira como si supiera algo.
+
+- clave: mercado
+  nombre: Puesto del mercado
+  categoria: servicio
+  tam: [3, 3]
+  coste: {madera: 15, oro: 5}
+  requisitos: {poblacion: 6}
+  efecto: {comercio: true, oro_dia: 1, animo: 1}
+  modelo: mercado
+  descripcion: Con puesto fijo, los mercaderes paran más y regatean mejor.
+
+- clave: torre_guardia
+  nombre: Torre de guardia
+  categoria: defensa
+  tam: [2, 2]
+  coste: {madera: 10, piedra: 20}
+  requisitos: {edificios: [herreria]}
+  efecto: {trabajadores: 1, oficios: [guardia, forastero, mozo], defensa: 10}
+  modelo: torre
+  descripcion: Desde arriba se ve venir a los bandidos. Y a los cobradores.
+
+- clave: cuartel
+  nombre: Cuartel
+  categoria: defensa
+  tam: [4, 3]
+  coste: {madera: 30, piedra: 12, oro: 10}
+  requisitos: {poblacion: 6}
+  efecto: {tropas: 12, defensa: 2}
+  modelo: cuartel
+  descripcion: Jergones, astilleros de lanzas y un patio para sudar. Cabe una docena de hombres de armas.
+
+- clave: muralla
+  nombre: Muralla de piedra
+  categoria: defensa
+  tam: [1, 1]
+  coste: {piedra: 4}
+  efecto: {defensa: 1.5, arrastre: true}
+  modelo: muralla
+  descripcion: Alta y gruesa. Tranquiliza mucho hasta que hay que pagarla.
+
+- clave: empalizada
+  nombre: Empalizada
+  categoria: defensa
+  tam: [1, 1]
+  coste: {madera: 2}
+  efecto: {defensa: 0.7, arrastre: true}
+  modelo: empalizada
+  descripcion: Troncos afilados. Al lobo le da que pensar.
+
+- clave: murete
+  nombre: Murito de piedra
+  categoria: adorno
+  tam: [1, 1]
+  coste: {piedra: 1}
+  efecto: {arrastre: true, encanto: 0.2}
+  modelo: murete
+  descripcion: De piedra seca, a la altura justa para sentarse a criticar.
+
+- clave: valla
+  nombre: Valla de madera
+  categoria: adorno
+  tam: [1, 1]
+  coste: {madera: 1}
+  efecto: {arrastre: true, encanto: 0.1}
+  modelo: valla
+  descripcion: Para que las gallinas sepan dónde acaba lo suyo.
+
+- clave: camino
+  nombre: Camino
+  categoria: camino
+  tam: [1, 1]
+  coste: {}
+  efecto: {arrastre: true, camino: true}
+  modelo: camino
+  descripcion: Tierra pisada. Por los caminos se anda más ligero y se encuentra uno con más gente.
+
+- clave: farol
+  nombre: Farolillo
+  categoria: adorno
+  tam: [1, 1]
+  coste: {madera: 1, oro: 1}
+  efecto: {luz: true, encanto: 0.5}
+  modelo: farol
+  descripcion: Luz de aceite para las noches. Los enamorados lo prefieren apagado.
+
+- clave: tendedero
+  nombre: Tendedero
+  categoria: adorno
+  tam: [2, 1]
+  coste: {madera: 1}
+  efecto: {encanto: 0.3}
+  modelo: tendedero
+  descripcion: Ropa tendida. En una aldea, la colada también habla.
+
+- clave: banco
+  nombre: Banco
+  categoria: adorno
+  tam: [1, 1]
+  coste: {madera: 1}
+  efecto: {encanto: 0.3}
+  modelo: banco
+  descripcion: Para sentarse a ver pasar la vida y comentarla.
+
+- clave: barriles
+  nombre: Barriles y cajas
+  categoria: adorno
+  tam: [1, 1]
+  coste: {madera: 1}
+  efecto: {encanto: 0.2}
+  modelo: barriles
+  descripcion: Nadie sabe qué guardan, y así debe seguir.
+
+- clave: letrero
+  nombre: Letrero
+  categoria: adorno
+  tam: [1, 1]
+  coste: {madera: 1}
+  efecto: {encanto: 0.2}
+  modelo: letrero
+  descripcion: Para que el forastero sepa dónde está, aunque no sepa leer.
+
+- clave: lenera
+  nombre: Leñera
+  categoria: adorno
+  tam: [2, 2]
+  coste: {madera: 3}
+  efecto: {encanto: 0.2}
+  modelo: lenera
+  descripcion: Troncos bien apilados. Dan paz de espíritu en noviembre.
+
+- clave: arbol
+  nombre: Árbol
+  categoria: adorno
+  tam: [1, 1]
+  coste: {}
+  efecto: {encanto: 0.3}
+  modelo: arbol
+  descripcion: Un carballo joven. Dará sombra a vuestros nietos.
+
+- clave: camposanto
+  nombre: Camposanto
+  categoria: servicio
+  tam: [3, 3]
+  coste: {piedra: 6}
+  requisitos: {edificios: [iglesia], unico: true}
+  efecto: {calma: 3}
+  modelo: camposanto
+  descripcion: Lugar de reposo. Aquí ya nadie discute, que es mucho decir.

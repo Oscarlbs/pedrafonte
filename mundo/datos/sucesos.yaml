@@ -1,0 +1,274 @@
+# Tabla del director de drama. Editable.
+#
+# Si la tensión de la aldea lleva dos días baja, el motor saca de aquí un suceso (al azar, según `peso`)
+# entre los que cumplan su `condicion` y cuyos `sujetos` estén en la aldea.
+#
+#   condicion    expresión sobre el estado (ver variables en mundo/aldea/motor/estado.py):
+#                esta_<clave de vecino>, tiene_<clave de edificio>, estacion, poblacion, grano, tension…
+#   sujetos      papeles → selector (clave:x, oficio:x, rasgo:x, azar, rival_a/rival_b, deudor/acreedor…)
+#   texto        lo que se anota en la bitácora y sale en la crónica
+#   efectos      lo que aplica el motor (ver mundo/aldea/motor/efectos.py)
+#   enfriamiento días que tarda en poder repetirse (999 = una sola vez)
+
+# --- Secretos que se escapan (uno por cada vecino del reparto) ---------------------------------------
+
+- clave: lena_de_mas
+  peso: 3
+  condicion: "esta_lenador and esta_panadera"
+  sujetos: {a: "clave:lenador", b: "clave:panadera", c: azar}
+  texto: "{c} madrugó más de la cuenta y vio a {a} dejando leña en la puerta de {b}. Antes del mediodía ya lo sabía el pozo."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {animo: -3, a: a}
+    - {tension: 10}
+  enfriamiento: 999
+
+- clave: pan_de_castana
+  peso: 3
+  condicion: "esta_panadera and esta_molinero and tiene_panaderia"
+  sujetos: {a: "clave:panadera", b: "clave:molinero"}
+  texto: "Hoy el pan sabía raro. {b} jura que su harina era buena y que lo raro lo pone otra, y mira a {a}."
+  efectos:
+    - {secreto: a, lo_sabe: b}
+    - {relacion: [a, b], delta: -8}
+    - {animo: -1, a: todos}
+    - {tension: 12}
+  enfriamiento: 999
+
+- clave: vara_de_muescas
+  peso: 3
+  condicion: "esta_molinero and tiene_molino"
+  sujetos: {a: "clave:molinero", c: azar}
+  texto: "A {a} se le cayó en la plaza una vara llena de muescas. {c} la recogió y dice que son muchas muescas para tan poco grano."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {tension: 12}
+  enfriamiento: 999
+
+- clave: marcos_andarines
+  peso: 3
+  condicion: "esta_viuda and esta_pastor"
+  sujetos: {a: "clave:viuda", b: "clave:pastor", c: azar}
+  texto: "{c} jura que los marcos del prado de {a} no están donde estaban el año pasado. {b} ha ido a medir a pasos."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {relacion: [a, b], delta: -10}
+    - {tension: 14}
+  enfriamiento: 999
+
+- clave: lana_en_la_cerca
+  peso: 3
+  condicion: "esta_pastor and esta_curandera"
+  sujetos: {a: "clave:pastor", b: "clave:curandera"}
+  texto: "{b} ha encontrado lana enganchada en la cerca de su huerto arrasado. Los jabalíes, que se sepa, no crían lana."
+  efectos:
+    - {secreto: a, lo_sabe: b}
+    - {relacion: [a, b], delta: -15}
+    - {animo: -4, a: a}
+    - {tension: 12}
+  enfriamiento: 999
+
+- clave: frasquito_bajo_la_sotana
+  peso: 3
+  condicion: "esta_curandera and esta_cura"
+  sujetos: {a: "clave:curandera", b: "clave:cura", c: azar}
+  texto: "{c} vio salir a {b} de casa de {a} a deshoras, con un frasquito bajo la sotana y cara de no haber estado allí."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {animo: -4, a: b}
+    - {tension: 11}
+  enfriamiento: 999
+
+- clave: limosnas_de_la_campana
+  peso: 3
+  condicion: "esta_cura and esta_tabernero"
+  sujetos: {a: "clave:cura", b: "clave:tabernero", c: azar}
+  texto: "{c} preguntó en voz alta por las limosnas de la campana. {a} se puso del color de la cera y {b} se puso a silbar."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {relacion: [a, b], delta: -6}
+    - {tension: 12}
+  enfriamiento: 999
+
+- clave: cofre_en_la_bodega
+  peso: 3
+  condicion: "esta_tabernero and esta_forastero and tiene_taberna"
+  sujetos: {a: "clave:tabernero", b: "clave:forastero", c: azar}
+  texto: "{c} bajó a la bodega de {a} a por un cuartillo y tropezó con un cofre cerrado que no es de la casa."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {relacion: [a, b], delta: -5}
+    - {tension: 12}
+  enfriamiento: 999
+
+- clave: rondando_la_fragua
+  peso: 3
+  condicion: "esta_forastero and esta_herrero"
+  sujetos: {a: "clave:forastero", b: "clave:herrero", c: azar}
+  texto: "{a} lleva tres días rondando la fragua sin encargar ni un clavo. {b} empieza a mosquearse y {c} a sacar cuentas."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {relacion: [a, b], delta: -4}
+    - {tension: 9}
+  enfriamiento: 999
+
+- clave: martillo_con_marca
+  peso: 3
+  condicion: "esta_herrero and esta_mozo"
+  sujetos: {a: "clave:herrero", b: "clave:mozo"}
+  texto: "{b} ha visto en la fragua de {a} un martillo con la marca de su padre. No ha dicho nada. Todavía."
+  efectos:
+    - {secreto: a, lo_sabe: b}
+    - {relacion: [a, b], delta: -20}
+    - {animo: -8, a: b}
+    - {recuerdo: "El martillo de mi padre está en la fragua de {a}. Me dijeron que se lo llevó la riada.", a: b, importancia: 9}
+    - {tension: 15}
+  enfriamiento: 999
+
+- clave: el_mozo_lee
+  peso: 3
+  condicion: "esta_mozo and esta_escriba"
+  sujetos: {a: "clave:mozo", b: "clave:escriba", c: azar}
+  texto: "{c} pilló a {a} leyendo de corrido un pliego de {b}. El chico dice que solo miraba los dibujos; el pliego no tiene dibujos."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {relacion: [a, b], delta: -8}
+    - {tension: 9}
+  enfriamiento: 999
+
+- clave: segundo_libro
+  peso: 3
+  condicion: "esta_escriba"
+  sujetos: {a: "clave:escriba", c: azar}
+  texto: "{a} sacó sus papeles a secar y entre ellos asomó un segundo libro, que guardó a toda prisa. {c} lo vio, y {c} no es de callar."
+  efectos:
+    - {secreto: a, lo_sabe: c}
+    - {animo: -3, a: a}
+    - {tension: 10}
+  enfriamiento: 999
+
+# --- Sucesos de cada día -------------------------------------------------------------------------------
+
+- clave: oveja_perdida
+  peso: 2
+  condicion: "esta_pastor"
+  sujetos: {a: "clave:pastor", b: azar}
+  texto: "A {a} se le ha perdido la Rubia, su oveja preferida. Media aldea la busca y la otra media opina dónde habría que buscar. La encuentra {b}."
+  efectos:
+    - {relacion: [a, b], delta: 8}
+    - {animo: -3, a: a}
+    - {recuerdo: "Se perdió la Rubia y hubo que batir medio monte. Apareció rumiando tan tranquila.", a: todos, importancia: 4}
+    - {tension: 8}
+  enfriamiento: 12
+
+- clave: rina_en_la_taberna
+  peso: 3
+  condicion: "tiene_taberna"
+  sujetos: {a: rival_a, b: rival_b}
+  texto: "Riña en la taberna entre {a} y {b}. Volaron dos jarras y una banqueta; la banqueta era inocente."
+  efectos:
+    - {relacion: [a, b], delta: -10}
+    - {recursos: {madera: -1}}
+    - {animo: -1, a: todos}
+    - {tension: 15}
+  enfriamiento: 6
+
+- clave: palabras_gordas
+  peso: 2
+  condicion: "not tiene_taberna"
+  sujetos: {a: rival_a, b: rival_b}
+  texto: "{a} y {b} se dijeron de todo junto a la lumbre. Lo más suave fue «zoquete»."
+  efectos:
+    - {relacion: [a, b], delta: -8}
+    - {tension: 13}
+  enfriamiento: 6
+
+- clave: bolsa_perdida
+  peso: 2
+  condicion: "poblacion >= 3"
+  sujetos: {a: azar, b: azar}
+  texto: "{a} ha perdido la bolsa con sus ahorros y mira a todo el mundo con mala cara, sobre todo a {b}."
+  efectos:
+    - {dinero: -5, a: a}
+    - {relacion: [a, b], delta: -6}
+    - {rumor: "{b} anda con monedas nuevas desde que {a} perdió la bolsa", sobre: b, origen: a}
+    - {tension: 10}
+  enfriamiento: 10
+
+- clave: bolsa_hallada
+  peso: 1
+  condicion: ""
+  sujetos: {a: azar}
+  texto: "{a} encontró una bolsa de monedas junto al camino y, contra todo pronóstico, se la llevó al señor."
+  efectos:
+    - {recursos: {oro: 6}}
+    - {opinion: 4, a: a}
+    - {animo: 2, a: a}
+    - {tension: 5}
+  enfriamiento: 15
+
+- clave: goteras
+  peso: 2
+  condicion: "estacion in ['otono', 'invierno'] and tiene_choza"
+  sujetos: {a: azar}
+  texto: "La lluvia ha calado el tejado de la choza. Hay cubos por todas partes y {a} ha dormido con un pie en cada uno."
+  efectos:
+    - {recursos: {madera: -3}}
+    - {animo: -3, a: todos}
+    - {tension: 8}
+  enfriamiento: 9
+
+- clave: gallina_que_falta
+  peso: 2
+  condicion: "tiene_gallinero"
+  sujetos: {a: azar, b: azar}
+  texto: "Falta una gallina. {a} acusa a {b}; {b}, al zorro; el zorro no ha hecho declaraciones."
+  efectos:
+    - {relacion: [a, b], delta: -8}
+    - {tension: 9}
+  enfriamiento: 8
+
+- clave: carta_sin_firma
+  peso: 2
+  condicion: "poblacion >= 4"
+  sujetos: {a: azar, b: "rasgo:chismoso"}
+  texto: "Ha aparecido clavada en la puerta de {a} una carta sin firma. Como {a} tardó en abrir, la leyó antes media aldea."
+  efectos:
+    - {rumor: "{a} recibe cartas sin firma, y por algo será", sobre: a, origen: b}
+    - {animo: -3, a: a}
+    - {tension: 10}
+  enfriamiento: 14
+
+- clave: coplas
+  peso: 2
+  condicion: "poblacion >= 5"
+  sujetos: {a: azar, b: azar}
+  texto: "Alguien ha sacado unas coplas con retintín. Nadie sabe quién las hizo, pero todos saben de quién hablan: de {a}."
+  efectos:
+    - {rumor: "{a} sale en unas coplas nuevas, y no muy bien parado", sobre: a, origen: b}
+    - {animo: -4, a: a}
+    - {animo: 1, a: todos}
+    - {tension: 9}
+  enfriamiento: 12
+
+- clave: mal_de_ojo
+  peso: 1
+  condicion: "esta_curandera and poblacion >= 5"
+  sujetos: {a: azar, b: "clave:curandera"}
+  texto: "A {a} se le ha cortado la leche, se le ha caído una teja y ha estornudado tres veces. Dice que es mal de ojo y mira hacia casa de {b}."
+  efectos:
+    - {relacion: [a, b], delta: -8}
+    - {rumor: "{b} echa mal de ojo a quien no le compra hierbas", sobre: b, origen: a}
+    - {tension: 10}
+  enfriamiento: 14
+
+- clave: deuda_reclamada
+  peso: 3
+  condicion: ""
+  sujetos: {a: acreedor, b: deudor}
+  texto: "{a} le ha reclamado la deuda a {b} delante de todos, con cifra, fecha y testigos."
+  efectos:
+    - {relacion: [a, b], delta: -8}
+    - {animo: -6, a: b}
+    - {tension: 12}
+  enfriamiento: 8

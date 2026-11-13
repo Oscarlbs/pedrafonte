@@ -1,0 +1,46 @@
+# Amenazas de fuera: bandidos, lobos y peste. Editable.
+#
+# Cada noche puede asomar una (probabilidad × riesgo de la dificultad). Primero llega el AVISO; el golpe
+# viene `dias_aviso` días después, para que el señor tenga tiempo de prepararse.
+#   fuerza     [mínimo, máximo]; se compara con la defensa de la aldea (torres, murallas, rondas, alianzas)
+#   rechazado  texto y efectos si la defensa aguanta
+#   golpe      texto y efectos si no (las pérdidas se reducen según cuánta defensa haya)
+# La peste no se para con muros: la frenan el pozo, la curandera y la cuarentena.
+
+- clave: bandidos
+  nombre: bandidos
+  condicion: "dia >= 8 and (oro + grano) >= 90"
+  probabilidad: 0.07
+  dias_aviso: 2
+  fuerza: [8, 20]
+  aviso: "Un pastor de paso avisa: hay una partida de bandidos acampada a dos días de camino, y preguntan por aldeas con granero."
+  rechazado:
+    texto: "Los bandidos asomaron al alba, vieron la guardia en su sitio y se lo pensaron mejor. Se fueron sin llevarse más que un susto."
+    efectos: [{opinion: 5, a: todos}, {animo: 3, a: todos}, {tension: -4}]
+  golpe:
+    texto: "Los bandidos entraron de noche. Se llevaron grano y monedas, y dejaron la puerta del granero colgando de un gozne."
+    efectos: [{recursos: {grano: -30, oro: -15}}, {opinion: -6, a: todos}, {animo: -6, a: todos}, {tension: 12}]
+
+- clave: lobos
+  nombre: lobos
+  condicion: "dia >= 5 and (estacion == 'invierno' or tiene_redil or tiene_gallinero)"
+  probabilidad: 0.08
+  dias_aviso: 1
+  fuerza: [4, 11]
+  aviso: "Esta noche se han oído aullidos en el monte, más cerca que ayer. Las ovejas no han pegado ojo."
+  rechazado:
+    texto: "Los lobos rondaron la aldea, olieron el humo y las empalizadas, y se volvieron al monte con el rabo entre las patas."
+    efectos: [{animo: 2, a: todos}, {opinion: 2, a: todos}]
+  golpe:
+    texto: "Los lobos entraron en los corrales. Faltan gallinas y dos ovejas, y Xan no tiene consuelo."
+    efectos: [{recursos: {pan: -6, grano: -8}}, {animo: -5, a: todos}, {animo: -8, a: "oficio:pastor"}, {opinion: -3, a: todos}, {tension: 8}]
+
+- clave: peste
+  nombre: peste
+  condicion: "dia >= 12 and poblacion >= 7"
+  probabilidad: 0.025
+  dias_aviso: 1
+  dias: 5
+  aviso: "Un buhonero cuenta que en la comarca corre una fiebre mala. Tosió dos veces al decirlo."
+  inicio: "Ha entrado la fiebre en la aldea. Hay tos en tres casas y miedo en todas."
+  fin: "La fiebre remite. Se abren las ventanas, se airean los jergones y se cuenta quién falta y quién sigue."

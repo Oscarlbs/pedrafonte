@@ -1,0 +1,55 @@
+# Leyes que puede promulgar el señor. Editable.
+#
+#   requisito      condición para poder promulgarla (variables del estado; vacío = siempre)
+#   modificadores  produccion / consumo / escenas (multiplican) · animo / tension / oro_dia / defensa (suman cada día)
+#   opinion        cuánto empuja la opinión de cada vecino: todos, por oficio o por rasgo («rasgo:devoto»)
+
+- clave: racionamiento
+  nombre: "Racionamiento"
+  descripcion: "Se come tres cuartos de ración. La despensa dura más; la paciencia, menos."
+  modificadores: {consumo: 0.75, animo: -5, tension: 1}
+  opinion: {todos: -4, "rasgo:avaro": 3}
+
+- clave: jornada_larga
+  nombre: "Jornada de sol a sol"
+  descripcion: "Se trabaja hasta que no se ve. Rinde más todo, menos el buen humor."
+  modificadores: {produccion: 1.15, animo: -6, tension: 2}
+  opinion: {todos: -5}
+
+- clave: toque_de_queda
+  nombre: "Toque de queda"
+  descripcion: "Al anochecer, cada mochuelo a su olivo. Menos riñas, menos corrillos y menos alegrías."
+  modificadores: {escenas: 0.6, tension: -3, animo: -3}
+  opinion: {todos: -3, tabernero: -8, cura: 3, "rasgo:miedoso": 2}
+
+- clave: leva
+  nombre: "Rondas de guardia"
+  descripcion: "Cada vecino hace su turno de vigilancia. Más defensa, menos brazos para la faena."
+  modificadores: {defensa: 6, produccion: 0.92, animo: -2}
+  opinion: {todos: -2, "rasgo:miedoso": 5}
+
+- clave: dia_de_mercado
+  nombre: "Día de mercado"
+  descripcion: "Un día a la semana se compra y se vende en la plaza. Entra oro y sale buen humor."
+  requisito: "tiene_mercado"
+  modificadores: {oro_dia: 3, animo: 2}
+  opinion: {todos: 1, tabernero: 3, molinero: 2}
+
+- clave: diezmo
+  nombre: "Diezmo para la iglesia"
+  descripcion: "Una parte de lo recaudado va a la iglesia. El cura os bendice; los ahorradores, menos."
+  requisito: "tiene_iglesia"
+  modificadores: {oro_dia: -2, tension: -2, animo: 1}
+  opinion: {cura: 12, "rasgo:devoto": 4, "rasgo:avaro": -5, curandera: -6}
+
+- clave: vino_solo_en_fiestas
+  nombre: "Vino solo en fiestas"
+  descripcion: "Entre semana, agua. Se madruga mejor y se ríe peor."
+  modificadores: {produccion: 1.06, animo: -4, tension: -1}
+  opinion: {todos: -2, tabernero: -15, cura: 6}
+
+- clave: cuarentena
+  nombre: "Cuarentena"
+  descripcion: "Nadie entra, nadie sale y cada uno en su casa. Frena la peste y casi todo lo demás."
+  modificadores: {escenas: 0.5, produccion: 0.88, animo: -4}
+  opinion: {todos: -2, curandera: 6, tabernero: -6}

@@ -1,0 +1,26 @@
+# Fiestas del año, en sus fechas de verdad. Editable.
+#
+#   fecha    MM-DD · o bien  pascua: N  (días después del Domingo de Pascua; negativo = antes)
+#   efectos  lo que aplica el motor ese día (ánimo, tensión…)
+#   gasto    lo que se come y se bebe de más (si no hay, se celebra igual, con menos alegría)
+
+- {clave: ano_nuevo, nombre: Año Nuevo, fecha: "01-01", texto: "Año nuevo. Todos prometen enmendarse; el escriba apunta las promesas para reírse en diciembre.", efectos: [{animo: 4, a: todos}], gasto: {grano: 4}}
+- {clave: reyes, nombre: los Reyes, fecha: "01-06", texto: "Día de Reyes. Los críos reciben castañas y los mayores, consejos.", efectos: [{animo: 4, a: todos}, {opinion: 1, a: todos}], gasto: {grano: 4}}
+- {clave: candelaria, nombre: la Candelaria, fecha: "02-02", texto: "La Candelaria: se bendicen las velas y se casan los pajaritos, dice la copla.", efectos: [{animo: 2, a: todos}, {tension: -2}]}
+- {clave: entroido, nombre: el Entroido, pascua: -47, texto: "Martes de Entroido: máscaras, cencerros y verdades dichas con careta.", efectos: [{animo: 7, a: todos}, {tension: -5}], gasto: {grano: 8}}
+- {clave: san_xose, nombre: San Xosé, fecha: "03-19", texto: "San Xosé: se empieza a mirar la tierra con ganas.", efectos: [{animo: 2, a: todos}]}
+- {clave: pascua, nombre: la Pascua, pascua: 0, texto: "Domingo de Pascua. Hay rosca, campanas (quien las tenga) y ropa limpia.", efectos: [{animo: 6, a: todos}, {tension: -4}, {opinion: 2, a: "rasgo:devoto"}], gasto: {grano: 6}}
+- {clave: maios, nombre: los Maios, fecha: "05-01", texto: "Los Maios: se cubre de flores y retama a quien se deje, y se cantan coplas de crítica.", efectos: [{animo: 5, a: todos}, {tension: -2}]}
+- {clave: san_xoan, nombre: San Xoán, fecha: "06-24", texto: "Noche de San Xoán: hogueras, saltos y agua de siete hierbas. Mañana nadie madruga.", efectos: [{animo: 8, a: todos}, {tension: -6}], gasto: {madera: 4, grano: 6}}
+- {clave: santiago, nombre: Santiago, fecha: "07-25", texto: "Día del Apóstol. Pasan peregrinos y se asa lo que haya.", efectos: [{animo: 5, a: todos}], gasto: {grano: 6}}
+- {clave: asuncion, nombre: la romería de agosto, fecha: "08-15", texto: "Romería de agosto: gaita, empanada y siesta bajo los carballos.", efectos: [{animo: 7, a: todos}, {tension: -5}], gasto: {grano: 8}}
+- {clave: san_miguel, nombre: San Miguel, fecha: "09-29", texto: "San Miguel: se cierran las cosechas y se ajustan las cuentas. Unos celebran y otros echan números.", efectos: [{animo: 3, a: todos}, {recursos: {oro: 5}}]}
+- {clave: samain, nombre: el Samaín, fecha: "10-31", texto: "Noche de Samaín: calabazas con vela y cuentos de la Santa Compaña. Los miedosos duermen acompañados.", efectos: [{animo: 4, a: todos}, {animo: -2, a: "rasgo:miedoso"}]}
+- {clave: magosto, nombre: el Magosto, fecha: "11-01", texto: "Magosto: castañas asadas, vino nuevo y caras tiznadas.", efectos: [{animo: 6, a: todos}, {tension: -4}], gasto: {grano: 4, madera: 2}}
+- {clave: san_martino, nombre: San Martiño, fecha: "11-11", texto: "San Martiño: a cada cerdo le llega el suyo. Hay matanza y convite.", efectos: [{animo: 5, a: todos}, {recursos: {pan: 10}}]}
+- {clave: santa_icia, nombre: Santa Icía, fecha: "11-22", texto: "Santa Icía, patrona de los músicos: quien tiene gaita la toca y quien no, da palmas.", efectos: [{animo: 5, a: todos}, {tension: -3}], gasto: {grano: 4}}
+- {clave: san_andres, nombre: San Andrés, fecha: "11-30", texto: "San Andrés: se prueba el vino nuevo y se le encuentran defectos al del vecino.", efectos: [{animo: 4, a: todos}], gasto: {grano: 3}}
+- {clave: santa_lucia, nombre: Santa Lucía, fecha: "12-13", texto: "Santa Lucía: mengua la noche y crece el día un paso de gallina.", efectos: [{animo: 3, a: todos}]}
+- {clave: nochebuena, nombre: la Nochebuena, fecha: "12-24", texto: "Nochebuena: lumbre grande, panxoliñas y, por una noche, tregua.", efectos: [{animo: 8, a: todos}, {tension: -8}], gasto: {grano: 8, madera: 3}}
+- {clave: navidad, nombre: la Navidad, fecha: "12-25", texto: "Navidad. Sobras de anoche y buena voluntad, que dura lo que dura.", efectos: [{animo: 5, a: todos}, {opinion: 2, a: todos}], gasto: {grano: 5}}
+- {clave: fin_de_ano, nombre: el fin de año, fecha: "12-31", texto: "Se despide el año. El escriba cierra el libro y abre otro, con la misma letra y más ojeras.", efectos: [{animo: 4, a: todos}], gasto: {grano: 4}}

@@ -1,0 +1,10 @@
+# Dónde vive el señor. De aquí salen la luz del día, la estación y el clima reales.
+# Para mudarse: cambia nombre, latitud, longitud y huso. Nada más.
+nombre: Vigo, España
+latitud: 42.2406
+longitud: -8.7207
+huso: Europe/Madrid
+
+# Clima real desde Open-Meteo (gratuita y sin clave). Si no responde, el juego usa clima simulado
+# según la estación. Pon «simulado» para no consultar nunca internet.
+clima: open-meteo

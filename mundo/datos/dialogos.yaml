@@ -1,0 +1,470 @@
+# Plantillas del motor de IA «simulado». Editable: aquí está la voz de la aldea cuando no hay IA de verdad.
+#
+# El MOTOR decide el tema de cada escena y quién hace de «a», «b», «c»…; este archivo solo pone las palabras
+# y propone cambios pequeños, que el validador revisa como si vinieran de una IA real.
+#
+# Huecos que se pueden usar entre llaves:
+#   {a} {b} {c} {d}        cómo llaman a cada uno          {lugar}     dónde están
+#   {pulla_a} {pulla_b}    con qué se mete uno con otro    {queja_a} {queja_b}  queja de su oficio
+#   {frase_clima}          comentario del tiempo que hace  {estacion}
+#   {rumor} {sobre}        el rumor que pasa y de quién    {cantidad}  monedas de una deuda
+#   {fiesta} {suceso} {visitante} {aldea}   {o_a} {o_b}  «o» / «a» según sea él o ella
+# En `cambios`, «a», «b», «c» se sustituyen por los vecinos de la escena.
+
+pullas:
+  molinero: [harina con tiza, balanza ligera]
+  panadera: [pan de castaña, hogaza menguada]
+  herrero: [hierro mal pagado, deuda vieja]
+  tabernero: [vino bautizado, cuartillo corto]
+  cura: [sermón recalentado, cepillo vacío]
+  escriba: [tinta rancia, pluma chivata]
+  curandera: [cocimiento de ortigas, humo de hierbajos]
+  pastor: [oveja mojada, queso pasado]
+  lenador: [serrín, leña verde]
+  viuda: [cuentas viejas, luto de diez años]
+  mozo: [mocos, recado olvidado]
+  forastero: [camino ajeno, bolsa sin dueño]
+  labrador: [terrón, surco torcido]
+  cantero: [polvo de piedra, callo viejo]
+  guardia: [lanza roma, siesta de garita]
+
+quejas:
+  molinero: ["La muela no espera a nadie.", "Hoy el río baja flojo y la rueda con pereza."]
+  panadera: ["Llevo en pie desde antes del gallo.", "La masa hoy no quería subir ni con rezos."]
+  herrero: ["El hierro hoy salió terco.", "Tres herraduras y ninguna pagada."]
+  tabernero: ["Fían todos y no paga ninguno.", "Hoy ni los que deben vienen a deber."]
+  cura: ["Predico en desierto, y con goteras.", "Sin campana no hay quien madrugue a misa."]
+  escriba: ["Tres pliegos llevo y aún no ha pasado nada.", "Se me acaba la tinta y sobran los sucesos."]
+  curandera: ["Media aldea con tos y la otra media con cuento.", "Las hierbas buenas crecen siempre donde más cuesta."]
+  pastor: ["La Rubia se me ha vuelto a escapar.", "Conté las ovejas tres veces y me salieron tres cuentas."]
+  lenador: ["El carballo de hoy tenía más nudos que un sermón.", "Hacha mellada, día largo."]
+  viuda: ["Las tierras no se miran solas.", "Si no estoy yo encima, aquí no se siembra un grano."]
+  mozo: ["Llevo seis recados y es media mañana.", "Todos mandan y ninguno da merienda."]
+  forastero: ["No hay oficio más cansado que el de recién llegado.", "Aquí hasta los perros me preguntan de dónde vengo."]
+  labrador: ["La tierra pide más de lo que da.", "Llevo el lomo como un arado viejo."]
+  cantero: ["La piedra, cuanto más buena, más pesa.", "Hoy la cantera devolvía los golpes."]
+  guardia: ["Vigilar cansa más de lo que parece.", "No ha pasado ni un conejo. Mejor así."]
+
+clima:
+  despejado: ["Qué día más claro. Algo malo vendrá.", "Hace un sol que da gusto trabajar. A otro.", "Ni una nube. Así no hay quien se queje a gusto."]
+  nubes: ["Cielo de panza de burra.", "Ni llueve ni deja de llover.", "Está el día que no sabe lo que quiere."]
+  lluvia: ["Llueve como si lo regalasen.", "Otra vez agua. Aquí hasta las piedras crían musgo.", "Con esta lluvia nos van a salir ranas en el zurrón."]
+  niebla: ["No se ve ni el puente. Buen día para las meigas.", "Con esta niebla no encuentro ni mis propios pies.", "La niebla viene del río a enterarse de todo."]
+  tormenta: ["Truena que parece que riñen arriba.", "Con estos rayos no salgo ni a por leña.", "Menuda tronada. Que santa Bárbara nos coja confesados."]
+  nieve: ["Nieva. Las ovejas no se distinguen del prado.", "Qué frío. Se me han helado hasta las ganas.", "Nieve en el tejado y sabañones en los pies."]
+
+escenas:
+  tiempo:
+    - lineas:
+        - [a, "{frase_clima}"]
+        - [b, "Mientras no nos lleve el tejado, {a}, yo no me quejo."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 1}]
+    - lineas:
+        - [a, "{frase_clima}"]
+        - [b, "Eso mismo dijiste ayer."]
+        - [a, "Porque ayer también era verdad."]
+    - lineas:
+        - [a, "¿Qué, {b}? ¿Cómo va el {estacion}?"]
+        - [b, "Va. Que no es poco."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 1}]
+    - lineas:
+        - [b, "{frase_clima}"]
+        - [a, "Pues a mí me duele la rodilla, así que mañana, peor."]
+        - [c, "Tu rodilla acierta más que el cura."]
+
+  trabajo:
+    - lineas:
+        - [a, "{queja_a}"]
+        - [b, "{queja_b}"]
+        - [a, "Pues estamos apañados."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 2}]
+    - lineas:
+        - [a, "{queja_a}"]
+        - [b, "Si quieres te cambio el oficio. Un día."]
+        - [a, "Ni medio."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 1}, {tipo: animo, aldeano: a, delta: 1}]
+    - lineas:
+        - [b, "{queja_b}"]
+        - [a, "Trabajo no falta, {b}. Falta quien lo pague."]
+      cambios: [{tipo: tension, delta: 1}]
+    - lineas:
+        - [a, "¿Mucha faena, {b}?"]
+        - [b, "La justa para no aburrirse y la de más para no descansar."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 1}]
+
+  rivalidad:
+    - lineas:
+        - [a, "Mira quién viene: {b}. Ya olía yo a {pulla_b}."]
+        - [b, "Mejor oler a eso que a {pulla_a}, {a}."]
+        - [c, "Haya paz, que nos oye medio valle."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -4}, {tipo: tension, delta: 3}]
+    - lineas:
+        - [a, "{b}, a ver si un día cumples lo que cobras."]
+        - [b, "El día que tú cobres lo que vales, {a}, nos sale barato a todos."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -5}, {tipo: tension, delta: 3}, {tipo: animo, aldeano: a, delta: -2}]
+    - lineas:
+        - [b, "No he dicho nada, {a}."]
+        - [a, "Ni falta. Te lo veo en la cara, que la tienes de {pulla_b}."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -3}, {tipo: tension, delta: 2}]
+    - lineas:
+        - [a, "{b}. Hoy no tengo cuerpo para reñir."]
+        - [b, "Ni yo. Mañana seguimos."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 3}, {tipo: tension, delta: -2}]
+    - lineas:
+        - [a, "Dicen que el señor te ha dado la razón a ti, {b}."]
+        - [b, "El señor tiene ojos en la cara."]
+        - [a, "Y poca memoria."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -3}, {tipo: opinion_senor, aldeano: a, delta: -2}, {tipo: tension, delta: 2}]
+    - lineas:
+        - [a, "Te tengo dicho, {b}, que por mi puerta no pases."]
+        - [b, "La calle es del señor, y el aire, de quien lo respira."]
+        - [c, "Y la paciencia, mía, que se me acaba."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -4}, {tipo: tension, delta: 3}, {tipo: recuerdo, aldeano: c, texto: "{a} y {b} volvieron a tenerlas en {lugar}. Cualquier día llegan a las manos.", importancia: 4}]
+
+  deuda:
+    - lineas:
+        - [a, "{b}: {cantidad} monedas. No se me olvidan."]
+        - [b, "Ni a mí, {a}, ni a mí. Ya pagaré."]
+        - [a, "Eso mismo decías cuando eras joven."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -3}, {tipo: tension, delta: 2}, {tipo: animo, aldeano: b, delta: -3}]
+    - lineas:
+        - [b, "Tened, {a}. No es todo, pero es algo."]
+        - [a, "Algo es. Apuntado queda lo que falta."]
+      cambios: [{tipo: dinero, de: b, a: a, cantidad: 2}, {tipo: relacion, a: a, b: b, delta: 4}, {tipo: animo, aldeano: b, delta: 2}]
+    - lineas:
+        - [a, "¿Y lo mío, {b}?"]
+        - [b, "Lo vuestro, lo vuestro… ¿No veis cómo viene el año?"]
+        - [a, "El año lleva diez viniendo así."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -4}, {tipo: tension, delta: 2}]
+
+  amor_solos:
+    - lineas:
+        - [a, "Pasaba por aquí. De casualidad."]
+        - [b, "Ya. Como ayer. Y como anteayer."]
+        - [a, "Las casualidades, que son muy tercas."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 3}, {tipo: animo, aldeano: a, delta: 3}, {tipo: animo, aldeano: b, delta: 3}]
+    - lineas:
+        - [b, "Nos van a ver, {a}."]
+        - [a, "Que miren."]
+        - [b, "Calla. …Mañana, a la misma hora."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 3}, {tipo: animo, aldeano: a, delta: 2}, {tipo: animo, aldeano: b, delta: 2}]
+    - lineas:
+        - [a, "Te guardé esto. No es gran cosa."]
+        - [b, "Es de las pocas cosas grandes que hay en este valle."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 4}, {tipo: animo, aldeano: b, delta: 4}, {tipo: recuerdo, aldeano: b, texto: "{a} me guardó un regalo. No se lo he dicho a nadie.", importancia: 6}]
+
+  amor_disimulo:
+    - lineas:
+        - [c, "¿Y vosotros dos qué cuchicheáis?"]
+        - [a, "Del tiempo."]
+        - [b, "Del tiempo, sí. Que cambia mucho."]
+      cambios: [{tipo: rumor, origen: c, sobre: a, texto: "{a} y {b} hablan mucho del tiempo cuando creen que nadie mira"}, {tipo: tension, delta: 1}]
+    - lineas:
+        - [a, "Buenas, {b}."]
+        - [b, "Buenas, {a}."]
+        - [c, "Cuánta ceremonia para dos que se conocen de siempre."]
+      cambios: [{tipo: animo, aldeano: a, delta: -1}]
+    - lineas:
+        - [b, "{a}, se te ha caído esto."]
+        - [a, "No es mío."]
+        - [b, "Pues quédatelo igual."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 2}]
+
+  rumor:
+    - lineas:
+        - [a, "Yo no digo nada, {b}, pero {rumor}."]
+        - [b, "¡No me digas!"]
+        - [a, "Lo que oyes. Y tú no lo has oído de mí."]
+    - lineas:
+        - [a, "¿Sabes lo de {sobre}?"]
+        - [b, "¿Qué de {sobre}?"]
+        - [a, "Pues que {rumor}."]
+        - [b, "Ya decía yo."]
+    - lineas:
+        - [a, "Acércate, que esto no es para gritarlo: {rumor}."]
+        - [b, "Madre mía. ¿Y quién te lo dijo?"]
+        - [a, "Quien lo sabe."]
+    - lineas:
+        - [b, "Te veo cara de saber algo, {a}."]
+        - [a, "Saber, no sé. Pero cuentan que {rumor}."]
+        - [b, "Pues si lo cuentan, por algo será."]
+
+  hambre:
+    - lineas:
+        - [a, "Tengo el estómago pegado al espinazo."]
+        - [b, "Pues ve acostumbrándote, que la despensa suena a hueco."]
+      cambios: [{tipo: animo, aldeano: a, delta: -2}, {tipo: opinion_senor, aldeano: a, delta: -2}, {tipo: tension, delta: 3}]
+    - lineas:
+        - [a, "¿Queda pan?"]
+        - [b, "Queda hambre, que es más barata."]
+        - [a, "A ver si el señor cena de lo mismo."]
+      cambios: [{tipo: opinion_senor, aldeano: a, delta: -3}, {tipo: opinion_senor, aldeano: b, delta: -2}, {tipo: tension, delta: 3}]
+    - lineas:
+        - [a, "Mis tripas llevan dos días de sermón."]
+        - [b, "Las mías ya ni protestan. Mala señal."]
+      cambios: [{tipo: animo, aldeano: b, delta: -2}, {tipo: tension, delta: 2}]
+
+  abundancia:
+    - lineas:
+        - [a, "Una hogaza entera me he comido. Entera."]
+        - [b, "Así da gusto. Que dure."]
+      cambios: [{tipo: animo, aldeano: a, delta: 2}, {tipo: opinion_senor, aldeano: a, delta: 1}]
+    - lineas:
+        - [a, "Con la despensa llena, hasta {c} parece simpático."]
+        - [b, "No exageres. Pero casi."]
+      cambios: [{tipo: animo, aldeano: b, delta: 1}]
+
+  impuestos:
+    - lineas:
+        - [a, "Entre el tributo y la sisa, trabajo más para el señor que para mí."]
+        - [b, "Calla, que encima querrá que demos las gracias."]
+      cambios: [{tipo: opinion_senor, aldeano: a, delta: -3}, {tipo: opinion_senor, aldeano: b, delta: -2}, {tipo: tension, delta: 3}]
+    - lineas:
+        - [a, "¿Has visto lo que pide ahora el señor?"]
+        - [b, "Lo he visto. Y lo he pagado, que es peor."]
+      cambios: [{tipo: opinion_senor, aldeano: b, delta: -2}, {tipo: tension, delta: 2}]
+
+  senor_bien:
+    - lineas:
+        - [a, "Será señor, pero el nuestro no ha salido de los peores."]
+        - [b, "No lo digas muy alto, que se lo cree."]
+      cambios: [{tipo: opinion_senor, aldeano: a, delta: 2}]
+    - lineas:
+        - [a, "Con este señor al menos se come."]
+        - [b, "Y se duerme bajo techo. Cosa rara."]
+      cambios: [{tipo: opinion_senor, aldeano: b, delta: 1}, {tipo: animo, aldeano: a, delta: 1}]
+
+  senor_mal:
+    - lineas:
+        - [a, "El señor manda mucho y acierta poco."]
+        - [b, "Dale tiempo. O dale un mapa."]
+      cambios: [{tipo: opinion_senor, aldeano: a, delta: -2}, {tipo: tension, delta: 2}]
+    - lineas:
+        - [a, "¿Tú has visto al señor preguntar algo antes de mandar?"]
+        - [b, "Yo lo he visto mandar antes de pensar."]
+      cambios: [{tipo: opinion_senor, aldeano: b, delta: -2}, {tipo: tension, delta: 2}]
+
+  senor_neutro:
+    - lineas:
+        - [a, "¿Qué andará tramando hoy el señor?"]
+        - [b, "Algo que nos tocará cargar a nosotros."]
+    - lineas:
+        - [a, "Dicen que el señor nos mira desde arriba, como a hormigas."]
+        - [b, "Pues que mire. Yo saludo por si acaso."]
+      cambios: [{tipo: animo, aldeano: b, delta: 1}]
+
+  sin_techo:
+    - lineas:
+        - [a, "Otra noche al raso junto a la lumbre."]
+        - [b, "Dice el señor que casas habrá. También dijo que llovería menos."]
+      cambios: [{tipo: opinion_senor, aldeano: a, delta: -2}, {tipo: tension, delta: 1}]
+    - lineas:
+        - [a, "Tengo la espalda hecha al suelo ya."]
+        - [b, "Cuando haya casa no vas a saber dormir en jergón."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 2}]
+
+  fiesta:
+    - lineas:
+        - [a, "¡Feliz {fiesta}, {b}!"]
+        - [b, "¡Igualmente! Hoy no riño ni con quien se lo merece."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 3}, {tipo: animo, aldeano: a, delta: 3}, {tipo: animo, aldeano: b, delta: 3}]
+    - lineas:
+        - [a, "En {fiesta} no se trabaja."]
+        - [b, "Se trabaja, pero cantando."]
+        - [c, "Pues canta bajo, que desafinas."]
+      cambios: [{tipo: animo, aldeano: a, delta: 2}, {tipo: animo, aldeano: b, delta: 2}]
+
+  suceso:
+    - lineas:
+        - [a, "¿Te has enterado? {suceso}"]
+        - [b, "Algo oí. En esta aldea no se aburre uno."]
+    - lineas:
+        - [a, "{suceso}"]
+        - [b, "¡Lo que nos faltaba!"]
+        - [a, "O lo que nos sobraba."]
+      cambios: [{tipo: tension, delta: 1}]
+
+  visitante:
+    - lineas:
+        - [a, "Ha llegado {visitante} por el camino."]
+        - [b, "A ver qué vende. Y a ver qué se lleva."]
+    - lineas:
+        - [a, "¿Has visto a {visitante}?"]
+        - [b, "Lo he visto. Trae cara de traer noticias, y las noticias nunca vienen solas."]
+
+  recien_llegado:
+    - lineas:
+        - [a, "Bienvenid{o_b} a {aldea}, {b}. Aquí hay poco de todo, pero se reparte."]
+        - [b, "Con que haya sitio junto al fuego, me conformo."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 5}, {tipo: animo, aldeano: b, delta: 3}]
+    - lineas:
+        - [a, "Así que acabas de llegar, {b}."]
+        - [b, "Eso dicen. A ver cuánto tardo en ser de aquí de toda la vida."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 3}]
+
+  noche:
+    - lineas:
+        - [a, "Echa otro tronco, {b}."]
+        - [b, "Echa tú, que yo ya eché ayer."]
+        - [a, "Lo apunto."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 1}]
+    - lineas:
+        - [a, "Arrímate a la lumbre, {b}, que hay sitio."]
+        - [b, "Sitio hay. Lo que no hay es quien se calle."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 1}]
+    - lineas:
+        - [a, "Mira qué luna, {b}."]
+        - [b, "La misma de ayer. Pero hoy la miramos, que ya es algo."]
+      cambios: [{tipo: animo, aldeano: b, delta: 1}, {tipo: relacion, a: a, b: b, delta: 2}]
+
+  taberna:
+    - lineas:
+        - [a, "¡Otra ronda!"]
+        - [b, "¿Y quién la paga?"]
+        - [a, "El que pregunte."]
+      cambios: [{tipo: animo, aldeano: a, delta: 2}, {tipo: relacion, a: a, b: b, delta: 1}]
+    - lineas:
+        - [a, "Este vino está más aguado que el río."]
+        - [b, "Pues bebe del río, que sale más barato."]
+        - [c, "Y con las mismas ranas."]
+      cambios: [{tipo: animo, aldeano: b, delta: 1}]
+    - lineas:
+        - [a, "Brindo por {aldea}, que aún no se nos ha caído encima."]
+        - [b, "Brindo por lo mismo, pero con menos confianza."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 2}, {tipo: animo, aldeano: a, delta: 2}]
+    - lineas:
+        - [a, "Apúntamelo, que hoy no llevo suelto."]
+        - [b, "Tú no llevas suelto desde la riada."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -1}]
+
+  amistad:
+    - lineas:
+        - [a, "Si necesitas una mano, {b}, ya sabes."]
+        - [b, "Lo sé. Y tú dos, que te conozco."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 3}, {tipo: animo, aldeano: b, delta: 1}]
+    - lineas:
+        - [a, "¿Te acuerdas de Vilavella, {b}?"]
+        - [b, "De lo bueno. Lo otro se lo llevó la riada."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: 2}]
+
+  recelo:
+    - lineas:
+        - [a, "{b}."]
+        - [b, "{a}."]
+        - [a, "Pues eso."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -1}]
+    - lineas:
+        - [a, "No sé qué tienes hoy, {b}, pero no me gusta."]
+        - [b, "Será que me parezco a ti."]
+      cambios: [{tipo: relacion, a: a, b: b, delta: -3}, {tipo: tension, delta: 1}]
+
+# Cómo se hincha un rumor al pasar de boca en boca (motor simulado).
+rumores:
+  numeros: [dos, tres, cinco, siete, diez, veinte, treinta, cincuenta, cien, doscientas, mil]
+  cambios:   # se busca el primero que aparezca y se sustituye por el siguiente escalón
+    - [de más, a brazadas]
+    - [a brazadas, a carretadas]
+    - [un puñado, medio saco]
+    - [medio saco, un saco entero]
+    - [una noche, muchas noches]
+    - [muchas noches, todas las noches]
+    - [de noche, cada noche]
+    - [a veces, siempre]
+    - [a escondidas, delante de todos]
+    - [debe, debe desde antes de nacer]
+    - [mira a, no le quita ojo a]
+    - [habla, cuchichea]
+    - [guarda, esconde bajo siete llaves]
+    - [con el dedo puesto, con la mano entera puesta]
+    - [el doble, el triple]
+    - [el triple, diez veces más]
+  colas:
+    - ", y no es la primera vez"
+    - ", y media aldea lo sabe"
+    - ", a plena luz del día"
+    - ", y el señor sin enterarse"
+    - ", y dicen que hay más"
+    - ", y aún va presumiendo"
+  colas_rasgo:
+    devoto: ", que Dios nos perdone"
+    malicioso: ", y a saber qué más"
+    bondadoso: ", aunque será mentira"
+    miedoso: ", y esto va a acabar mal"
+    avaro: ", y sin pagar un real"
+
+# Reflexión de cada noche (motor simulado). Se elige una apertura por ánimo y un cierre por rasgo.
+reflexion:
+  apertura:
+    alto: ["Buen día, dentro de lo que cabe.", "Hoy me acuesto contento.", "No ha estado mal la jornada."]
+    medio: ["Otro día.", "Ni bien ni mal.", "Un día de los que no se cuentan."]
+    bajo: ["Mal día.", "Me acuesto con un nudo en el pecho.", "Hoy todo salió torcido."]
+    hambre: ["Me acuesto con hambre.", "Las tripas no me dejan pensar en otra cosa.", "Otro día sin llenar el plato."]
+  sin_recuerdos: ["Hoy no pasó nada, que también es noticia.", "El día se fue sin dejar señal."]
+  con_recuerdo: ["No se me va de la cabeza: {recuerdo}", "Le doy vueltas a lo de hoy: {recuerdo}", "Lo que me llevo a la cama: {recuerdo}"]
+  cierre:
+    devoto: Mañana Dios dirá.
+    avaro: Y las cuentas, sin cuadrar.
+    sonador: Mañana será mejor, o al menos distinto.
+    terco: Pero yo no cedo.
+    chismoso: Mañana lo comento en el pozo.
+    miedoso: Ojalá no vaya a más.
+    orgulloso: Y que nadie me vea flaquear.
+    picaro: Algo se me ocurrirá.
+    callado: Y no hay más que decir.
+    leal: Mañana estaré donde me toca.
+    curioso: Mañana me entero de cómo sigue.
+    desconfiado: Mañana miraré a todos dos veces.
+    bondadoso: Que a todos nos vaya un poco mejor mañana.
+    exagerado: Nunca se vio cosa igual en este valle.
+    defecto: Mañana, más.
+
+# Charla con el señor (motor simulado). Las palabras clave deciden de qué se le está hablando.
+charla:
+  intenciones:
+    secreto: [secreto, escondes, ocultas, confiesa, callas, la verdad]
+    amenaza: [idiota, inútil, inutil, castig, azot, amenaz, vago, calla, necio, imbécil, imbecil, zoquete, horca, cepo]
+    halago: [gracias, buen trabajo, bien hecho, enhorabuena, aprecio, orgullo, felicito, te lo agradezco, buena labor]
+    rumores: [rumor, dicen, se dice, cuenta, cotille, novedad, qué sabes, que sabes, chisme, se comenta, enterado]
+    hambre: [hambre, comida, pan, grano, comer, despensa, cosecha]
+    impuestos: [impuesto, tributo, diezmo, pagar, recauda]
+    trabajo: [trabajo, oficio, faena, tarea, labor]
+    deseo: [necesitas, quieres, te falta, objetivo, sueñas, suenas, deseas, ayudar]
+    amor: [amor, novia, novio, casar, boda, enamor, quieres a]
+    senor: [de mí, de mi, gobierno, mando, lo hago, soy buen, opinas]
+    estado: [cómo estás, como estas, qué tal, que tal, cómo va, como va, cómo te va, cómo andas, como andas]
+    despedida: [adiós, adios, hasta luego, hasta mañana, con dios]
+    saludo: [hola, buenos días, buenos dias, buenas, salud, ave]
+  respuestas:
+    saludo: ["{saludo}", "{saludo} ¿Mandáis algo?"]
+    despedida: ["Id con Dios, señor.", "Aquí me quedo, señor. Como siempre.", "Hasta más ver. Que no sea para subir tributos."]
+    estado_alto: ["Bien, señor, y no lo digo por decir. {queja}", "Contento estoy. No lo vayáis a estropear."]
+    estado_medio: ["Tirando, señor. {queja}", "Ni fu ni fa, señor. Como el tiempo."]
+    estado_bajo: ["Mal, señor, para qué os voy a engañar. {queja}", "He tenido años mejores, y eso que alguno fue de peste."]
+    estado_hambre: ["Con hambre, señor. Lo demás se me olvida.", "Preguntadle a mis tripas, que hablan más alto que yo."]
+    trabajo: ["{queja} Pero se hace lo que se puede.", "Mi oficio es el que es, señor, y lo hago como sé."]
+    trabajo_sin_sitio: ["Mal puedo trabajar de {oficio} sin {edificio}, señor. Mientras tanto arrimo el hombro donde mandéis.", "Dadme {edificio} y veréis lo que es un buen {oficio}."]
+    hambre_bien: ["De comer no falta, señor, gracias a Dios y un poco a vos.", "La despensa aguanta. Tocad madera."]
+    hambre_justo: ["Hay para unos días, señor. Después, lo que Dios quiera y vos dispongáis.", "El grano mengua. No lo digo yo, lo dice el granero."]
+    hambre_mal: ["Hambre es lo que hay, señor. Con buenas palabras no se amasa.", "No queda ni para los ratones. Algo habrá que hacer."]
+    impuestos_bajo: ["Con lo que pedís se puede vivir, señor. No lo toquéis.", "De tributos no me quejo. Hoy."]
+    impuestos_medio: ["Lo justo, señor. Ni un real más, os lo ruego.", "Se paga y se calla. De momento."]
+    impuestos_alto: ["Nos estáis dejando en los huesos, señor.", "Entre lo que gano y lo que os lleváis, salgo a deber."]
+    rumor_cuenta: ["Yo no digo nada, señor, pero {rumor}.", "Ya que preguntáis: cuentan que {rumor}. Yo ni quito ni pongo.", "Se comenta que {rumor}. Vos sabréis qué hacer con eso."]
+    rumor_calla: ["Aquí nunca pasa nada, señor. Que yo sepa.", "Yo de cuentos no entiendo.", "Si algo supiera, no sería a vos a quien primero se lo contase. Con perdón."]
+    rumor_nada: ["No me ha llegado nada, señor. Y mira que escucho.", "Por una vez, no se cuenta nada. Será el frío."]
+    sobre_bien: ["¿{otro}? Buena gente. {nota}", "Con {otro} no tengo queja, señor. {nota}"]
+    sobre_regular: ["¿{otro}? Ni fu ni fa. Cada uno en su casa.", "De {otro} poco sé, y así estamos bien."]
+    sobre_mal: ["¿{otro}? Mejor no me tiréis de la lengua. {nota}", "Con {otro} no me hablo más que lo justo, señor. {nota}"]
+    secreto_revela: ["Os lo diré, señor, porque os tengo ley: {secreto}", "Mirad que me cuesta… {secreto} Ya está dicho."]
+    secreto_pista: ["Todos callamos algo, señor. Lo mío tiene que ver con {otro}, y no diré más.", "Hay cosas que pesan. Preguntadme otro día, cuando {otro} no ande cerca."]
+    secreto_niega: ["Yo soy un libro abierto, señor. En blanco.", "¿Secretos yo? Los justos para ser persona.", "De eso, ni en confesión."]
+    halago: ["Se agradece, señor. No se oye mucho por aquí.", "Vaya. Pues gracias. Ahora me toca desconfiar.", "Con una palabra buena se trabaja mejor que con dos órdenes."]
+    amenaza_orgulloso: ["Señor seréis, pero a mí no me habla así nadie.", "Guardaos las voces para quien las merezca."]
+    amenaza_miedoso: ["Perdonad, señor, perdonad. No volverá a pasar. Sea lo que sea.", "¡Ay, señor! Yo no he hecho nada. Creo."]
+    amenaza: ["Como mandéis, señor. Pero me acordaré.", "Así no se gana uno a la gente, señor."]
+    deseo: ["Ya que preguntáis: {objetivo}", "Lo que quiero es sencillo, señor. {objetivo}"]
+    amor: ["De esas cosas no hablo con señores.", "¿Yo? Qué cosas tenéis. Hablemos del tiempo.", "A mi edad, señor… bueno, a mi edad también. Pero no os lo voy a contar."]
+    senor_bien: ["No lo hacéis mal, señor. Mejor que el último, que ya es decir.", "Se os aprecia. No os acostumbréis."]
+    senor_regular: ["Vais tirando, señor, como todos.", "Ni os alabo ni os critico. Hoy."]
+    senor_mal: ["Ya que preguntáis: mal, señor. Se manda mucho y se escucha poco.", "La gente murmura, y con razón."]
+    defecto: ["No sabría deciros, señor. {muletilla}", "{muletilla} De eso sé poco.", "Eso preguntádselo al escriba, que lo apunta todo."]

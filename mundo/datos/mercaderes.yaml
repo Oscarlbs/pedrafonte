@@ -1,0 +1,108 @@
+# Mercaderes y viajeros que llegan por el camino. Editable.
+#
+# Cada mañana puede llegar uno (más a menudo si hay puesto de mercado). Se queda `dias` y trae:
+#   ofertas   tratos que el señor puede cerrar: coste (lo que se paga) y efectos (lo que se recibe);
+#             `veces` es cuántas veces se puede repetir el trato
+#   noticias  una frase de las que trae (sale en la bitácora y da que hablar)
+#   lios      con probabilidad `lio`, al marcharse deja uno (texto + efectos que aplica el motor)
+
+visitantes:
+  - clave: mercader_grano
+    tipo: mercader
+    peso: 3
+    nombres: [Bertoldo el Arriero, maese Xácome, Pero Panza, Mariña la Trajinera]
+    descripcion: Un arriero con tres mulas cargadas de sacos y una balanza que jura que es honrada.
+    dias: 2
+    color: "#8c5a2b"
+    ofertas:
+      - {clave: grano, texto: "30 de grano por 10 monedas", coste: {oro: 10}, efectos: [{recursos: {grano: 30}}], veces: 3}
+      - {clave: pan, texto: "12 hogazas por 5 monedas", coste: {oro: 5}, efectos: [{recursos: {pan: 12}}], veces: 2}
+      - {clave: vende_madera, texto: "Os compra 20 de madera por 7 monedas", coste: {madera: 20}, efectos: [{recursos: {oro: 7}}], veces: 2}
+    noticias:
+      - En Castrovello la cosecha ha sido corta y don Ordoño anda de peor humor que de costumbre.
+      - Dicen que hay bandidos en el camino de Ribadouro. A mí no me han asaltado porque no les he dado ocasión.
+      - En la feria de Montefurado el trigo se paga a precio de oro. Yo, por ser vos, os lo dejo a precio de plata.
+    lio: 0.2
+    lios:
+      - texto: "Cuando el mercader ya estaba lejos, {a} pesó lo comprado: faltaba un buen puñado. La balanza honrada tenía truco."
+        sujetos: {a: azar}
+        efectos: [{recursos: {grano: -6}}, {opinion: -2, a: a}, {tension: 5}]
+      - texto: "El mercader se marchó dejando una cuenta sin pagar en casa de {a}, que jura que la próxima vez cobra por adelantado."
+        sujetos: {a: azar}
+        efectos: [{dinero: -4, a: a}, {animo: -3, a: a}, {tension: 4}]
+
+  - clave: mercader_piedra
+    tipo: mercader
+    peso: 2
+    nombres: [Fernán el Cantero, Mendo Carretas, la viuda de Lestrove]
+    descripcion: Un carro de bueyes con sillares, herramientas y un mozo dormido encima.
+    dias: 2
+    color: "#6a6a72"
+    ofertas:
+      - {clave: piedra, texto: "20 de piedra por 9 monedas", coste: {oro: 9}, efectos: [{recursos: {piedra: 20}}], veces: 3}
+      - {clave: madera, texto: "25 de madera por 8 monedas", coste: {oro: 8}, efectos: [{recursos: {madera: 25}}], veces: 2}
+      - {clave: vende_grano, texto: "Os compra 25 de grano por 9 monedas", coste: {grano: 25}, efectos: [{recursos: {oro: 9}}], veces: 2}
+    noticias:
+      - Doña Urraca está levantando una torre nueva en Ribadouro. Para ver mejor a los vecinos, dice.
+      - El abad Fruela compra toda la piedra que encuentra. A saber qué penitencia está construyendo.
+    lio: 0.15
+    lios:
+      - texto: "El mozo del carretero se ha quedado: dice que {a} le ha prometido trabajo. {a} dice que solo le dio los buenos días."
+        sujetos: {a: azar}
+        efectos: [{animo: 2, a: todos}, {tension: 3}]
+
+  - clave: juglar
+    tipo: juglar
+    peso: 2
+    nombres: [Martín Codax el Mozo, Paio Trovas, Xograr sin Nombre]
+    descripcion: Un juglar flaco con un laúd y la capa remendada. Canta por la cena y cobra por callar.
+    dias: 1
+    color: "#b0356a"
+    ofertas:
+      - {clave: funcion, texto: "Una función en la plaza por 3 monedas", coste: {oro: 3}, efectos: [{animo: 6, a: todos}, {tension: -4}, {opinion: 2, a: todos}], veces: 1}
+      - {clave: copla, texto: "Una copla en vuestro honor por 5 monedas", coste: {oro: 5}, efectos: [{opinion: 4, a: todos}], veces: 1}
+    noticias:
+      - Vengo de la corte, donde no me dejaron entrar, y traigo romances nuevos de amores, batallas y un molinero.
+      - En Ribadouro me pagaron con un pan duro. En Castrovello, con un sermón. A ver aquí.
+    lio: 0.35
+    lios:
+      - texto: "El juglar se despidió cantando una copla sobre {a} que nadie le había pedido. Se la sabe ya toda la aldea."
+        sujetos: {a: azar, b: azar}
+        efectos: [{rumor: "{a} sale en la copla del juglar, y la copla no miente", sobre: a, origen: b}, {animo: -4, a: a}, {tension: 6}]
+
+  - clave: buhonero
+    tipo: mercader
+    peso: 2
+    nombres: [Toribio el Buhonero, Sabina Cintas, el Tío de las Agujas]
+    descripcion: Un buhonero con un cajón a la espalda del que sale de todo, cintas, agujas, ungüentos y cuentos.
+    dias: 1
+    color: "#3f7a6b"
+    ofertas:
+      - {clave: baratijas, texto: "Cintas, agujas y espejuelos para todos, 4 monedas", coste: {oro: 4}, efectos: [{animo: 4, a: todos}], veces: 1}
+      - {clave: unguento, texto: "Ungüento milagroso, 3 monedas", coste: {oro: 3}, efectos: [{salud: 6, a: todos}], veces: 1}
+    noticias:
+      - Por el norte anda una fiebre mala. Yo vendo un ungüento que no la cura, pero consuela.
+      - He visto lobos cerca del paso. Flacos. Mala cosa, un lobo flaco.
+    lio: 0.25
+    lios:
+      - texto: "El ungüento milagroso del buhonero era sebo con romero. A {a} le ha salido un sarpullido que no veas."
+        sujetos: {a: azar}
+        efectos: [{salud: -8, a: a}, {animo: -3, a: a}, {tension: 3}]
+
+  - clave: peregrino
+    tipo: viajero
+    peso: 2
+    nombres: [un peregrino de Santiago, una romera coja, fray Benito el Caminante]
+    descripcion: Un peregrino con bordón, concha y muchas ganas de contar el viaje entero.
+    dias: 1
+    color: "#7a6a4a"
+    ofertas:
+      - {clave: posada, texto: "Darle cena y posada (4 de grano)", coste: {grano: 4}, efectos: [{opinion: 2, a: todos}, {animo: 2, a: todos}, {opinion: 3, a: "rasgo:devoto"}], veces: 1}
+    noticias:
+      - En los caminos se habla bien de esta aldea. También se habla, pero menos, de su señor.
+      - Vengo de muy lejos y en todas partes es igual, el que manda, manda, y el que no, opina.
+    lio: 0.1
+    lios:
+      - texto: "El peregrino se marchó al alba con las bendiciones de todos y, se ha sabido luego, con la manta de {a}."
+        sujetos: {a: azar}
+        efectos: [{animo: -3, a: a}, {tension: 3}]

@@ -1,0 +1,169 @@
+# Aldeas vecinas y sus señores. Editable. Todo ficticio.
+#
+# Cada cierto tiempo un vecino manda un mensaje: comercio, boda, alianza, amenaza o cortesía. El señor
+# contesta eligiendo postura y el motor aplica las consecuencias. `relacion` va de −100 a 100.
+#   estilo   cómo escribe (elige las plantillas de `mensajes`)
+#   vende / compra   lo que le sobra y lo que le falta (para las ofertas de comercio)
+#   belicoso  cuánto le gusta amenazar (0–1)
+#   tipo      aldea | torre | abadia | villa | puerto | castillo | burgo (cómo se pinta en el mapa)
+#   pos       [x, y] en el mapa de la comarca, de 0 a 100 (vuestra aldea está en `guerra.yaml`)
+#   fuerza    lanzas de su mesnada · defensa: muros y torres · riqueza: lo que se puede sacar de allí
+# Van de menos a más: la primera se toma con cuatro labradores; la última, con todo un ejército.
+
+aldeas:
+  - clave: vilanova
+    nombre: Vilanova do Souto
+    senor: el mayordomo Paio
+    caracter: Labrador venido a más. Manda sobre veinte casas y un castaño, y le tiembla la voz cuando ve una lanza.
+    estilo: ceremonioso
+    relacion: 5
+    vende: grano
+    compra: madera
+    belicoso: 0.0
+    tipo: aldea
+    pos: [34, 70]
+    fuerza: 7
+    defensa: 2
+    riqueza: 40
+  - clave: meiras
+    nombre: Torre de Meiras
+    senor: don Lopo el Tuerto
+    caracter: Hidalgo arruinado con torre propia. Cobra peaje a quien pasa y lo llama hospitalidad.
+    estilo: bronco
+    relacion: -15
+    vende: piedra
+    compra: oro
+    belicoso: 0.6
+    tipo: torre
+    pos: [68, 74]
+    fuerza: 13
+    defensa: 9
+    riqueza: 55
+  - clave: montefurado
+    nombre: Montefurado
+    senor: el abad Fruela
+    caracter: Fraile con alma de mercader. Bendice mucho, regala poco y lo apunta todo.
+    estilo: untuoso
+    relacion: 0
+    vende: madera
+    compra: oro
+    belicoso: 0.2
+    tipo: abadia
+    pos: [24, 44]
+    fuerza: 11
+    defensa: 15
+    riqueza: 110
+  - clave: castrovello
+    nombre: Castrovello
+    senor: don Ordoño el Cumplido
+    caracter: Viejo, ceremonioso y tacaño. Todo lo arregla con un banquete que pagan otros.
+    estilo: ceremonioso
+    relacion: 10
+    vende: grano
+    compra: madera
+    belicoso: 0.1
+    tipo: villa
+    pos: [72, 46]
+    fuerza: 22
+    defensa: 12
+    riqueza: 90
+  - clave: ribadouro
+    nombre: Ribadouro
+    senor: doña Urraca la Recia
+    caracter: Guerrera, directa y de genio vivo. Primero amenaza y luego os invita a cenar.
+    estilo: bronco
+    relacion: -10
+    vende: piedra
+    compra: grano
+    belicoso: 0.7
+    tipo: villa
+    pos: [46, 28]
+    fuerza: 34
+    defensa: 16
+    riqueza: 100
+  - clave: portomouro
+    nombre: Portomouro
+    senor: el alcalde Xoán das Barcas
+    caracter: Mercader de río elegido por mercaderes. Todo tiene precio y él se sabe los precios de memoria.
+    estilo: untuoso
+    relacion: 5
+    vende: grano
+    compra: piedra
+    belicoso: 0.15
+    tipo: puerto
+    pos: [14, 82]
+    fuerza: 27
+    defensa: 21
+    riqueza: 170
+  - clave: lobeira
+    nombre: Castro de Lobeira
+    senor: don Nuno Peláez, el Lobo
+    caracter: Señor de castillo viejo y mesnada nueva. Habla poco, cobra mucho y no olvida nada.
+    estilo: bronco
+    relacion: -20
+    vende: piedra
+    compra: grano
+    belicoso: 0.8
+    tipo: castillo
+    pos: [84, 20]
+    fuerza: 46
+    defensa: 30
+    riqueza: 150
+  - clave: santamarina
+    nombre: Burgo de Santa Mariña
+    senor: el conde don Fernán
+    caracter: El conde de la comarca. Cortés como un obispo y paciente como un usurero; todos le deben algo.
+    estilo: ceremonioso
+    relacion: 0
+    vende: grano
+    compra: oro
+    belicoso: 0.35
+    tipo: burgo
+    pos: [18, 14]
+    fuerza: 70
+    defensa: 42
+    riqueza: 260
+
+# Plantillas de los mensajes (motor simulado). Huecos: {senor} {vecino} {aldea} {da} {pide} {cantidad}
+# {vuestro} (un vecino vuestro) {suyo} (alguien de allá).
+mensajes:
+  comercio:
+    ceremonioso:
+      - "De {senor}, señor de {vecino}, al muy noble señor de {aldea}, salud. Sabed que nos sobra {da} y que, por la amistad que nos une, estamos dispuestos a cedéroslo a cambio de {pide}. Es casi un regalo. Casi."
+    bronco:
+      - "Al de {aldea}: tengo {da}, quiero {pide}. Sí o no, que no tengo todo el día. Firmado: {senor}."
+    untuoso:
+      - "Hermano en Cristo: la Providencia nos ha dado {da} de más, y a vos, me dicen, {pide}. Hagamos que la Providencia circule. Vuestro en la oración, {senor}."
+  boda:
+    ceremonioso:
+      - "{senor} saluda al señor de {aldea}. Tenemos aquí a {suyo}, persona de buena crianza y mejor apetito, y nos han hablado bien de vuestro vecino {vuestro}. Una boda uniría nuestras casas. El banquete, naturalmente, en la vuestra."
+    bronco:
+      - "Al de {aldea}: {suyo}, de mi casa, quiere casarse y me ha dicho que con {vuestro}, de la vuestra. Yo no entiendo de amores, pero de alianzas sí. Contestad. {senor}."
+    untuoso:
+      - "Amado hermano: el matrimonio es santo y además conveniente. {suyo}, de nuestra feligresía, haría buena pareja con vuestro {vuestro}. La dote sería modesta, como manda la humildad. {senor}."
+  alianza:
+    ceremonioso:
+      - "{senor} al señor de {aldea}: los caminos andan revueltos y los buenos vecinos deben arrimarse. Os propongo alianza: si os atacan, acudo; si me atacan, acudís. Y si no ataca nadie, cenamos."
+    bronco:
+      - "Al de {aldea}: me caéis menos mal que los otros. Alianza: vuestros enemigos, míos; los míos, vuestros. Tengo más que vos, así que salís ganando. {senor}."
+    untuoso:
+      - "Hermano: unidos en la fe y, si os place, en la defensa. Una alianza entre {vecino} y {aldea} agradaría al cielo y disuadiría a los bandidos. {senor}."
+  amenaza:
+    ceremonioso:
+      - "{senor} lamenta comunicar al señor de {aldea} que ciertas lindes no están claras, y que {cantidad} monedas las aclararían mucho. De lo contrario, tendría que mandar a alguien a aclararlas en persona."
+    bronco:
+      - "Al de {aldea}: {cantidad} monedas antes de tres días, o voy yo a por ellas con cuarenta lanzas y muy mal café. {senor}."
+    untuoso:
+      - "Hermano: nos consta que vuestra aldea prospera, alabado sea. Un donativo de {cantidad} monedas a esta santa casa os libraría de ciertos peligros del camino que, ay, no siempre podemos contener. {senor}."
+  cortesia:
+    ceremonioso:
+      - "{senor} invita al señor de {aldea} a la fiesta mayor de {vecino}. Se ruega traer presente; no es obligatorio, pero se apunta quién no lo trae."
+    bronco:
+      - "Al de {aldea}: hay fiesta en {vecino}. Venid o mandad algo. Si no, tampoco me voy a echar a llorar. {senor}."
+    untuoso:
+      - "Hermano: celebramos al santo patrón de {vecino}. Vuestra presencia nos honraría, y vuestra limosna, más. {senor}."
+
+# Gente de fuera para las bodas.
+pretendientes:
+  nombres_m: [Lopo, Gonzalo, Sancho, Nuno, Hermenexildo]
+  nombres_f: [Aldara, Ximena, Guiomar, Mencía, Ermesenda]

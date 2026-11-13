@@ -1,0 +1,1380 @@
+/* Interfaz de la partida. Usa las variables y clases base de ui/estilo.css (pergamino, tinta y lacre). */
+
+.partida,
+.hud,
+.paneles {
+  display: contents;
+}
+
+.icono {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--tinta-suave);
+}
+
+.hueco {
+  flex: 1;
+}
+
+/* ── Barra superior: recursos, población y fecha ── */
+.hud-barra {
+  position: fixed;
+  top: 14px;
+  left: 320px;
+  right: 290px;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: calc(100vw - 630px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  padding: 8px 16px;
+}
+
+.hud-dato {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-dato b {
+  font-size: 16px;
+}
+
+.hud-dato.menor b {
+  font-weight: 500;
+  font-size: var(--tam-texto);
+}
+
+.hud-dato.alerta b,
+.hud-texto.alerta,
+.mal {
+  color: var(--mal);
+}
+
+.bien {
+  color: var(--bien);
+}
+
+.hud-texto,
+.hud-fecha {
+  font-size: var(--tam-chico);
+  color: var(--tinta-suave);
+}
+
+.hud-fecha {
+  font-style: italic;
+}
+
+.hud-barra .separador {
+  width: 1px;
+  height: 18px;
+  background: var(--pergamino-borde);
+  opacity: 0.6;
+}
+
+.hud-etiqueta {
+  font-size: var(--tam-chico);
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--pergamino-borde);
+  background: var(--pergamino-claro);
+}
+
+.hud-etiqueta.mal {
+  border-color: var(--mal);
+  background: #f6ddd3;
+}
+
+.hud-etiqueta.bien {
+  border-color: var(--bien);
+  background: #e4edd6;
+}
+
+/* El título del señor (solo si no está la cartela) y las etiquetas que son botones. */
+.hud-titulo {
+  font-family: var(--fuente-titulo);
+  font-variant: small-caps;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+button.hud-etiqueta {
+  font: inherit;
+  font-size: var(--tam-chico);
+  color: inherit;
+  cursor: pointer;
+}
+
+button.hud-etiqueta.mal {
+  color: var(--mal);
+}
+
+button.hud-etiqueta:hover {
+  border-color: var(--oro);
+}
+
+button.hud-etiqueta:focus-visible {
+  outline: 2px solid var(--oro);
+  outline-offset: 2px;
+}
+
+.hud-etiqueta.guerra:not(.mal) {
+  border-color: var(--oro);
+  background: #f6e7b8;
+}
+
+/* En la cartela, el título que se ha ganado el señor va encima del nombre de la aldea. */
+.cartela .rango {
+  display: block;
+  font-family: var(--fuente);
+  font-size: var(--tam-chico);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--lacre);
+  text-shadow: none;
+}
+
+/* ── Botonera del señor ── */
+.hud-botones {
+  position: fixed;
+  left: 16px;
+  top: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 168px;
+}
+
+.hud-botones .boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  box-shadow: var(--sombra-suave);
+}
+
+.insignia {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--lacre);
+  color: var(--pergamino-claro);
+  font-size: var(--tam-chico);
+  text-align: center;
+  line-height: 20px;
+}
+
+/* El botón que pide la lección en curso late despacio. */
+.hud-botones .boton.latido {
+  border-color: var(--oro);
+  animation: latido 1.8s ease-in-out infinite;
+}
+
+@keyframes latido {
+  0%,
+  100% {
+    box-shadow: var(--sombra-suave), 0 0 0 0 rgba(214, 160, 48, 0);
+  }
+
+  50% {
+    box-shadow: var(--sombra-suave), 0 0 0 5px rgba(214, 160, 48, 0.55), 0 0 14px 4px rgba(255, 214, 120, 0.55);
+  }
+}
+
+/* ── Tutorial: la tarjeta del escriba ── */
+.tutorial {
+  display: contents;
+}
+
+.tutorial-tarjeta,
+.tutorial-pastilla {
+  position: fixed;
+  right: 16px;
+  top: max(64px, calc(var(--hud-bajo, 50px) + 10px));
+  z-index: 2;
+}
+
+.tutorial-tarjeta {
+  width: min(350px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px - 118px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px 12px;
+}
+
+.tutorial-cabecera {
+  gap: 6px;
+}
+
+.tutorial-titulo {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.tutorial-tarjeta p {
+  margin: 0;
+  line-height: 1.42;
+}
+
+.tutorial-texto {
+  font-size: 15px;
+}
+
+.tutorial-como {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio-chico);
+  background: var(--pergamino-claro);
+  font-size: 14px;
+}
+
+.tutorial-premio {
+  font-size: 14px;
+  color: var(--bien);
+}
+
+.tutorial-progreso {
+  height: 6px;
+  border: 1px solid var(--pergamino-borde);
+  border-radius: 999px;
+  background: var(--pergamino-oscuro);
+  overflow: hidden;
+  flex: none;
+}
+
+.tutorial-progreso > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--oro), #d9a93a);
+}
+
+.tutorial-botones {
+  flex-wrap: wrap;
+}
+
+.tutorial-saltar {
+  font-size: var(--tam-chico);
+  color: var(--tinta-suave);
+}
+
+.tutorial-pastilla {
+  display: none;
+  align-items: baseline;
+  gap: 8px;
+  max-width: min(350px, calc(100vw - 32px));
+  padding: 6px 14px 7px;
+  border-radius: 999px;
+  font: inherit;
+  color: var(--tinta);
+  cursor: pointer;
+  text-align: left;
+}
+
+.tutorial-pastilla::before {
+  border-radius: 999px;
+}
+
+.tutorial-pastilla:hover {
+  border-color: var(--oro);
+}
+
+.tutorial-pastilla:focus-visible {
+  outline: 2px solid var(--oro);
+  outline-offset: 2px;
+}
+
+.tutorial-pastilla-titulo {
+  font-family: var(--fuente-titulo);
+  font-variant: small-caps;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Oculta a mano (lo recuerda el mundo) o plegada porque hay un panel lateral abierto: queda la pastilla. */
+.tutorial-tarjeta.plegada:not(.desplegada),
+.con-panel .tutorial-tarjeta:not(.desplegada) {
+  display: none;
+}
+
+.tutorial-tarjeta.plegada:not(.desplegada) + .tutorial-pastilla,
+.con-panel .tutorial-tarjeta:not(.desplegada):not(.oculto) + .tutorial-pastilla {
+  display: flex;
+}
+
+.con-panel .tutorial-tarjeta,
+.con-panel .tutorial-pastilla {
+  right: 442px;
+}
+
+/* ── Panel lateral ── */
+.panel {
+  position: fixed;
+  right: 16px;
+  top: max(64px, calc(var(--hud-bajo, 50px) + 10px));
+  bottom: 118px;
+  width: min(410px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.panel-cabecera {
+  justify-content: space-between;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--pergamino-borde);
+}
+
+.panel-cabecera .titulo {
+  margin: 0;
+}
+
+.boton.cerrar {
+  padding: 0 10px;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.panel-cuerpo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel-cuerpo > * {
+  flex-shrink: 0;
+}
+
+.panel-cuerpo .etiqueta {
+  white-space: normal;
+  line-height: 1.5;
+}
+
+/* Campo de texto (el .campo de la base es para desplegables) */
+.entrada {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio-chico);
+  background: var(--pergamino-claro);
+  color: var(--tinta);
+  font: inherit;
+}
+
+.entrada:focus-visible {
+  outline: 2px solid var(--oro);
+  outline-offset: 1px;
+}
+
+.panel-cuerpo p,
+.rollo p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.panel-cuerpo .subtitulo {
+  margin: 6px 0 0;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio-chico);
+  background: var(--pergamino-claro);
+}
+
+.tarjeta.vigente {
+  border-color: var(--oro);
+  box-shadow: 0 0 0 1px var(--oro) inset;
+}
+
+.tarjeta .subtitulo {
+  margin: 0;
+}
+
+.opciones {
+  gap: 6px;
+}
+
+.boton.opcion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  white-space: normal;
+  height: auto;
+  padding: 7px 10px;
+}
+
+.pista {
+  font-style: italic;
+}
+
+.letra {
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.lista {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  line-height: 1.4;
+}
+
+.enlace {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--lacre);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--pergamino-borde);
+}
+
+.enlace:hover {
+  color: var(--lacre-claro);
+}
+
+.tributos {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Ficha de un vecino */
+.datos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 12px;
+  margin: 0;
+}
+
+.datos dt {
+  font-size: var(--tam-chico);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  padding-top: 2px;
+}
+
+.datos dd {
+  margin: 0;
+}
+
+.medidor {
+  display: inline-block;
+  width: 84px;
+  height: 8px;
+  vertical-align: middle;
+  border: 1px solid var(--pergamino-borde);
+  border-radius: 999px;
+  background: var(--pergamino-oscuro);
+  overflow: hidden;
+}
+
+.medidor > span {
+  display: block;
+  height: 100%;
+  background: var(--oro);
+}
+
+.boton.vecino {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  height: auto;
+  padding: 6px 10px;
+}
+
+.boton.vecino .columna {
+  flex: 1;
+  gap: 0;
+}
+
+.punto {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  flex: none;
+}
+
+.charla-registro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.dice-senor {
+  color: var(--tinta-suave);
+  font-style: italic;
+}
+
+.dice-vecino {
+  padding: 6px 10px;
+  border-radius: var(--radio-chico);
+  background: var(--pergamino-claro);
+  border: 1px solid var(--pergamino-borde);
+}
+
+.charla-entrada .entrada {
+  flex: 1;
+  min-width: 0;
+}
+
+.charla-registro:empty {
+  display: none;
+}
+
+.formulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bitacora li {
+  list-style: none;
+  margin-left: -18px;
+  padding-left: 8px;
+  border-left: 3px solid var(--pergamino-borde);
+}
+
+.bitacora .suceso-amenaza,
+.bitacora .suceso-revuelta {
+  border-left-color: var(--mal);
+}
+
+.bitacora .suceso-fiesta,
+.bitacora .suceso-llegada {
+  border-left-color: var(--bien);
+}
+
+.bitacora .suceso-drama {
+  border-left-color: var(--oro);
+}
+
+/* ── Hueste ── */
+.unidad .subtitulo {
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+.unidad.sin-requisito {
+  background: transparent;
+}
+
+.unidad-cifras {
+  font-size: var(--tam-chico);
+  color: var(--tinta-suave);
+}
+
+.unidad-botones {
+  gap: 5px;
+}
+
+.unidad-botones .boton {
+  min-width: 38px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.datos .total {
+  padding-top: 5px;
+  border-top: 1px solid var(--pergamino-borde);
+}
+
+/* ── Aldeas: lo que se puede hacer con la aldea en la que se está ── */
+.aldea-acciones {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.aviso-reinicio {
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--mal);
+  border-radius: var(--radio-chico);
+  background: #f6ddd3;
+}
+
+.aviso-reinicio .fila {
+  flex-wrap: wrap;
+}
+
+/* ── Menú de construcción ── */
+.menu-construir {
+  position: fixed;
+  left: 200px;
+  right: 442px;
+  bottom: 118px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px 12px;
+}
+
+.cabecera-construir {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cabecera-construir .titulo {
+  margin: 0 8px 0 0;
+}
+
+.pestanas {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.catalogo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ficha-edificio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 132px;
+  padding: 6px 10px;
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio-chico);
+  background: var(--pergamino-claro);
+  color: var(--tinta);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ficha-edificio:hover {
+  border-color: var(--oro);
+}
+
+.ficha-edificio.activo {
+  border-color: var(--lacre);
+  box-shadow: 0 0 0 1px var(--lacre) inset;
+}
+
+.ficha-edificio.caro {
+  opacity: 0.55;
+}
+
+.detalle {
+  min-height: 2.6em;
+  margin: 0;
+}
+
+/* ── Avisos ── */
+.avisos {
+  position: fixed;
+  left: 50%;
+  top: max(66px, calc(var(--hud-bajo, 50px) + 10px));
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 32px));
+  /* Por encima de los velos (pergamino, mapa): un aviso se tiene que ver esté lo que esté abierto. */
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+
+/* Con el mapa abierto los avisos bajan: arriba va lo que contesta el propio mapa. */
+.con-mapa .avisos {
+  top: auto;
+  bottom: 18px;
+}
+
+.aviso-partida {
+  padding: 8px 12px;
+  font-size: var(--tam-chico);
+  line-height: 1.4;
+  animation: aparecer 0.25s ease-out;
+}
+
+.aviso-partida.mal {
+  border-color: var(--mal);
+  color: var(--tinta);
+}
+
+.aviso-partida.bien {
+  border-color: var(--bien);
+  color: var(--tinta);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ── Pergamino del escriba (y fin de partida) ── */
+.velo {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 14, 8, 0.45);
+  z-index: 20;
+}
+
+.rollo {
+  width: min(640px, calc(100vw - 40px));
+  max-height: min(78vh, 760px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px 34px 22px;
+}
+
+.rollo .titulo {
+  margin: 0;
+  text-align: center;
+}
+
+.opiniones li {
+  font-style: italic;
+}
+
+.fin-rollo {
+  justify-content: center;
+  margin-top: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso-partida {
+    animation: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .hud-barra {
+    left: 16px;
+    right: 16px;
+    top: 86px;
+    max-width: none;
+  }
+
+  .hud-botones {
+    top: 150px;
+  }
+
+  .menu-construir {
+    left: 16px;
+    right: 16px;
+  }
+
+  .avisos {
+    top: max(150px, calc(var(--hud-bajo, 50px) + 10px));
+  }
+
+  .con-panel .tutorial-tarjeta,
+  .con-panel .tutorial-pastilla {
+    display: none !important;
+  }
+}
+
+/* ── Mapa de la comarca ── */
+.velo-mapa {
+  z-index: 21;
+}
+
+.mapa-hoja {
+  width: min(1320px, calc(100vw - 40px));
+  height: min(880px, calc(100vh - 40px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 18px 16px;
+}
+
+.mapa-cabecera {
+  gap: 12px;
+  flex: none;
+}
+
+.mapa-cabecera .titulo {
+  margin: 0;
+}
+
+.mapa-titulo {
+  font-style: italic;
+  color: var(--lacre);
+}
+
+.mapa-dominios {
+  font-size: 14px;
+}
+
+.mapa-avisos {
+  flex: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 22px;
+}
+
+.mapa-cuerpo {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 392px;
+  gap: 14px;
+}
+
+.mapa-lienzo {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mapa-dibujo {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border-radius: var(--radio-chico);
+  user-select: none;
+}
+
+.mapa-leyenda {
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
+  font-size: var(--tam-chico);
+  color: var(--tinta-suave);
+}
+
+.mapa-leyenda .fila {
+  gap: 5px;
+}
+
+.mapa-muestra {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1.5px solid var(--aro);
+  background: var(--tinte);
+  flex: none;
+}
+
+.mapa-muestra.hueste-propia {
+  border-color: #5c1c18;
+  background: var(--lacre);
+}
+
+.mapa-muestra.hueste-enemiga {
+  border-color: var(--mal);
+  background: #2f2622;
+}
+
+/* Colores según la situación de cada lugar (ficha, leyenda y dibujo). */
+.vuestro {
+  --tinte: #ecc763;
+  --aro: #a8791f;
+}
+
+.aliado {
+  --tinte: #a9c6da;
+  --aro: #3f6a8c;
+}
+
+.hostil {
+  --tinte: #e49a8c;
+  --aro: #a33a30;
+}
+
+.neutral {
+  --tinte: #f1e6c6;
+  --aro: #8f7a58;
+}
+
+.propia {
+  --tinte: #f7e7ae;
+  --aro: #8f2f2a;
+}
+
+/* El resultado de una embajada (o el «no se puede»), encima del mapa. */
+.mapa-resultado {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 32px));
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px 10px 16px;
+  border: 1px solid var(--pergamino-borde);
+  border-left: 5px solid var(--oro);
+  border-radius: var(--radio-chico);
+  background: var(--pergamino-claro);
+  box-shadow: var(--sombra-suave);
+  animation: aparecer 0.25s ease-out;
+}
+
+.mapa-resultado p {
+  flex: 1;
+  margin: 0;
+  line-height: 1.4;
+  color: var(--tinta);
+}
+
+.mapa-resultado.mal {
+  border-left-color: var(--mal);
+}
+
+.mapa-resultado.bien {
+  border-left-color: var(--bien);
+}
+
+.mapa-lado {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.mapa-lado > * {
+  flex-shrink: 0;
+}
+
+.mapa-lado p {
+  margin: 0;
+  line-height: 1.42;
+}
+
+.mapa-lado .subtitulo {
+  margin: 4px 0 0;
+}
+
+.mapa-lado .etiqueta {
+  white-space: normal;
+  line-height: 1.45;
+}
+
+.mapa-nombre {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.mapa-leccion {
+  gap: 2px;
+  border-color: var(--oro);
+}
+
+.mapa-situacion {
+  display: inline-block;
+  padding: 1px 9px;
+  border: 1px solid var(--aro);
+  border-radius: 999px;
+  background: var(--tinte);
+  font-size: var(--tam-chico);
+}
+
+.mapa-ficha {
+  border-left: 5px solid var(--aro);
+}
+
+.mapa-guerras {
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.boton-guerra {
+  flex: 1;
+  border-color: var(--lacre);
+  color: var(--lacre);
+  font-weight: 600;
+}
+
+.mapa-compositor {
+  border-color: var(--lacre);
+}
+
+.mapa-envios {
+  gap: 4px;
+}
+
+.mapa-envio {
+  gap: 5px;
+  padding: 3px 0;
+  border-bottom: 1px dotted var(--pergamino-borde);
+}
+
+.mapa-envio .columna {
+  gap: 0;
+}
+
+.mapa-pie {
+  position: sticky;
+  bottom: -1px;
+  flex-wrap: wrap;
+  margin: 0 -12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--pergamino-borde);
+  border-bottom: 1px solid var(--pergamino-borde);
+  background: var(--pergamino-claro);
+}
+
+.boton.paso {
+  min-width: 30px;
+  padding: 6px 8px 7px;
+}
+
+.mapa-cuantos {
+  min-width: 26px;
+  text-align: center;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mapa-cuenta.mal,
+.mapa-cuenta.bien {
+  color: var(--tinta);
+}
+
+.mapa-cuenta.mal b {
+  color: var(--mal);
+}
+
+.mapa-cuenta.bien b {
+  color: var(--bien);
+}
+
+.mapa-ojo {
+  padding: 6px 10px;
+  border: 1px solid var(--oro);
+  border-radius: var(--radio-chico);
+  background: #f6e7b8;
+  font-size: 14px;
+}
+
+.mapa-parte {
+  gap: 4px;
+  border-left: 4px solid var(--pergamino-borde);
+  font-size: 14px;
+}
+
+.mapa-parte.victoria {
+  border-left-color: var(--bien);
+}
+
+.mapa-parte.derrota {
+  border-left-color: var(--mal);
+}
+
+/* El dibujo (SVG): tinta sobre papel. Las medidas van en unidades del lienzo (100 de alto), salvo las de
+   los rótulos, que se dibujan en un sistema diez veces menor (ver `rotulo` en mapa.ts) y por eso van × 10. */
+.mapa-dibujo .papel {
+  fill: url(#mapa-papel);
+}
+
+.mapa-dibujo .orla {
+  fill: none;
+  stroke: #7a5a2c;
+  stroke-width: 0.5;
+}
+
+.mapa-dibujo .orla.fina {
+  stroke-width: 0.18;
+}
+
+.mapa-dibujo .mar {
+  fill: #b7cfcf;
+  opacity: 0.8;
+}
+
+.mapa-dibujo .orilla {
+  fill: none;
+  stroke: #4f7480;
+  stroke-width: 0.45;
+}
+
+.mapa-dibujo .ola {
+  fill: none;
+  stroke: #5f8794;
+  stroke-width: 0.28;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .rio-borde {
+  fill: none;
+  stroke: #4f7480;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .rio {
+  fill: none;
+  stroke: #b7d3d6;
+  stroke-width: 1.05;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .monte {
+  fill: #ead9b0;
+  stroke: #5a4429;
+  stroke-width: 0.38;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .monte-raya {
+  fill: none;
+  stroke: #5a4429;
+  stroke-width: 0.22;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
+.mapa-dibujo .arbol {
+  fill: #a9b77e;
+  stroke: #4c5a33;
+  stroke-width: 0.26;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .camino {
+  fill: none;
+  stroke: #7a5230;
+  stroke-width: 0.5;
+  stroke-dasharray: 1.5 1.1;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .rotulo-agua {
+  font-family: var(--fuente);
+  font-size: 22px;
+  font-style: italic;
+  fill: #46707d;
+  letter-spacing: 0.08em;
+}
+
+.mapa-dibujo .rosa circle {
+  fill: none;
+  stroke: #7a5a2c;
+  stroke-width: 0.2;
+}
+
+.mapa-dibujo .rosa-punta {
+  fill: #e9d7a6;
+  stroke: #5a4429;
+  stroke-width: 0.25;
+  stroke-linejoin: round;
+}
+
+.mapa-dibujo .rosa-media {
+  fill: none;
+  stroke: #5a4429;
+  stroke-width: 0.15;
+}
+
+.mapa-dibujo .rosa-norte {
+  font-family: var(--fuente-titulo);
+  font-size: 24px;
+  font-weight: 600;
+  text-anchor: middle;
+  fill: #5a4429;
+}
+
+.mapa-dibujo .lugar {
+  cursor: pointer;
+  outline: none;
+}
+
+.mapa-dibujo .lugar-zona {
+  fill: transparent;
+}
+
+.mapa-dibujo .lugar-suelo {
+  fill: var(--tinte);
+  stroke: var(--aro);
+  stroke-width: 0.35;
+  opacity: 0.9;
+}
+
+.mapa-dibujo .lugar-aro {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 0.45;
+  stroke-dasharray: 1.4 0.9;
+}
+
+.mapa-dibujo .lugar:hover .lugar-aro,
+.mapa-dibujo .lugar:focus-visible .lugar-aro {
+  stroke: var(--aro);
+}
+
+.mapa-dibujo .lugar.elegido .lugar-aro {
+  stroke: var(--lacre);
+  stroke-width: 0.6;
+}
+
+.mapa-dibujo .lugar.cercada .lugar-aro {
+  stroke: var(--mal);
+  stroke-width: 0.7;
+}
+
+.mapa-dibujo .lugar-glifo path,
+.mapa-dibujo .lugar-glifo circle {
+  fill: var(--tinte);
+  stroke: #3a2a1b;
+  stroke-width: 0.3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.mapa-dibujo .lugar-glifo .trazo {
+  fill: none;
+}
+
+.mapa-dibujo .lugar-glifo .pendon {
+  fill: var(--lacre);
+}
+
+.mapa-dibujo .lugar-glifo .pendoncillo {
+  fill: var(--aro);
+}
+
+.mapa-dibujo .lugar-nombre,
+.mapa-dibujo .lugar-nota,
+.mapa-dibujo .hueste-rotulo {
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #f6ebcb;
+  stroke-linejoin: round;
+}
+
+.mapa-dibujo .lugar-nombre {
+  font-family: var(--fuente-titulo);
+  font-size: 25.5px;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  fill: #3a2a1b;
+  stroke-width: 9px;
+}
+
+.mapa-dibujo .lugar.propia .lugar-nombre {
+  fill: var(--lacre);
+}
+
+.mapa-dibujo .lugar-nota {
+  font-family: var(--fuente);
+  font-size: 18.5px;
+  font-style: italic;
+  fill: #6d5741;
+  stroke-width: 7px;
+}
+
+.mapa-dibujo .hueste {
+  --disco: var(--lacre);
+  --borde: #5c1c18;
+}
+
+.mapa-dibujo .hueste.enemiga {
+  --disco: #2f2622;
+  --borde: var(--mal);
+}
+
+.mapa-dibujo .hueste-halo {
+  fill: var(--borde);
+  opacity: 0.22;
+  animation: halo 2.2s ease-in-out infinite;
+}
+
+.mapa-dibujo .hueste-disco {
+  fill: var(--disco);
+  stroke: var(--borde);
+  stroke-width: 0.5;
+}
+
+.mapa-dibujo .hueste-lanza {
+  fill: #fbf1d6;
+  stroke: #fbf1d6;
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mapa-dibujo .hueste-cartela {
+  fill: #fbf3dc;
+  stroke: var(--borde);
+  stroke-width: 0.25;
+}
+
+.mapa-dibujo .hueste-rotulo {
+  font-family: var(--fuente);
+  font-size: 19px;
+  font-weight: 600;
+  fill: var(--borde);
+  stroke: none;
+}
+
+@keyframes halo {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-botones .boton.latido {
+    animation: none;
+    box-shadow: var(--sombra-suave), 0 0 0 3px rgba(214, 160, 48, 0.6);
+  }
+
+  .mapa-dibujo .hueste-halo,
+  .mapa-resultado {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .mapa-cuerpo {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

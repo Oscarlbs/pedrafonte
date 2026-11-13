@@ -1,0 +1,5 @@
+# Dificultades. recursos: con cuánto se empieza · produccion: cuánto rinde todo ·
+# riesgo: cuánto aprietan hambre, amenazas y revueltas · paciencia: cuánto aguantan los vecinos.
+facil: {nombre: Apacible, descripcion: Para pasear por el valle sin sobresaltos., recursos: 1.5, produccion: 1.2, riesgo: 0.6, paciencia: 1.4}
+normal: {nombre: Llevadera, descripcion: "Riesgo moderado: cuesta perder, pero se puede.", recursos: 1.0, produccion: 1.0, riesgo: 1.0, paciencia: 1.0}
+dificil: {nombre: Recia, descripcion: Inviernos largos y vecinos con poca correa., recursos: 0.7, produccion: 0.85, riesgo: 1.4, paciencia: 0.75}

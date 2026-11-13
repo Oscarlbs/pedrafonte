@@ -1,0 +1,17 @@
+{
+  "name": "aldea-herramientas",
+  "private": true,
+  "type": "module",
+  "description": "Herramientas del repo: optimizar modelos y sacar capturas",
+  "scripts": {
+    "modelos": "node herramientas/optimizar-modelos.mjs",
+    "capturas": "node herramientas/capturas.mjs"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.1.0",
+    "@gltf-transform/extensions": "^4.1.0",
+    "@gltf-transform/functions": "^4.1.0",
+    "puppeteer-core": "^24.0.0",
+    "sharp": "^0.34.0"
+  }
+}

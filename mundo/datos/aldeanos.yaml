@@ -1,0 +1,310 @@
+# Reparto de Pedrafonte. Editable. Todo es ficticio.
+#
+# Los doce vienen de Vilavella, la aldea vieja que se llevó la riada; por eso arrastran deudas, piques y
+# querencias de antes. Llegan por `orden_llegada`: los cuatro primeros son los colonos; el resto aparece
+# cuando hay casa y comida.
+#
+# El conflicto está garantizado por construcción:
+#   · Cada secreto afecta a otro vecino (`secreto_sobre`), en cadena cerrada:
+#     leñador → panadera → molinero → viuda → pastor → curandera → cura → tabernero → forastero →
+#     herrero → mozo → escriba → leñador.
+#   · Dos rivalidades: molinero ⟷ panadera · cura ⟷ curandera.
+#   · Una deuda vieja: el herrero debe 30 monedas a la viuda.
+#   · Un amor escondido: el leñador y la panadera.
+#
+# Campos: clave, nombre, apodo (como le llaman), oficio (clave que usan los edificios), oficio_nombre,
+# genero (m/f), edad, orden_llegada, caracter, rasgos, objetivo, secreto, secreto_sobre, rumor_secreto
+# (cómo sonaría el secreto si se escapa; debe nombrar a su dueño), dinero, color (de la figurita) y habla (muletillas y saludo
+# para el motor simulado).
+#
+# Rasgos que entiende el motor: chismoso, callado, exagerado, malicioso, bondadoso, orgulloso, miedoso,
+# leal, avaro, sonador, picaro, devoto, desconfiado, curioso, terco.
+
+aldeanos:
+  - clave: lenador
+    nombre: Bieito Carballo
+    apodo: Bieito
+    oficio: lenador
+    oficio_nombre: leñador
+    genero: m
+    edad: 41
+    orden_llegada: 1
+    caracter: Callado y terco como una raíz. Habla poco y cumple mucho; cuando por fin dice algo, conviene escuchar.
+    rasgos: [callado, terco, leal]
+    objetivo: Que nadie toque el carballo viejo de la fuente, que ya estaba ahí antes que todos.
+    secreto: Quiere a Sabela la panadera desde Vilavella. Cada amanecer le deja leña de más en la puerta y ella le guarda la primera hogaza.
+    secreto_sobre: panadera
+    rumor_secreto: Bieito el leñador le deja leña de más a Sabela la panadera, y no por caridad
+    dinero: 12
+    color: "#5d7a3a"
+    habla:
+      muletillas: ["Hum.", "Lo que es, es.", "Bueno."]
+      saludo: Señor.
+
+  - clave: viuda
+    nombre: Aldonza de Outeiro
+    apodo: doña Aldonza
+    oficio: viuda
+    oficio_nombre: viuda con tierras
+    genero: f
+    edad: 58
+    orden_llegada: 2
+    caracter: Orgullosa, ahorradora y de lengua afilada. Lleva las cuentas de todo, sobre todo de lo que le deben.
+    rasgos: [orgulloso, avaro, chismoso]
+    objetivo: Que sus tierras sigan siendo suyas y las mejores del valle, y cobrar hasta la última moneda.
+    secreto: Su difunto Gumersindo movió de noche los marcos del prado, comiéndole tres varas de tierra a Xan el pastor. Ella lo sabe y calla.
+    secreto_sobre: pastor
+    rumor_secreto: los marcos del prado de doña Aldonza andan de noche, y siempre hacia la tierra de Xan el pastor
+    dinero: 46
+    color: "#3d3550"
+    habla:
+      muletillas: ["En vida de mi difunto esto no pasaba.", "Yo no digo nada, pero…", "Apuntado queda."]
+      saludo: Dios os guarde, señor, y os dé mejor tino que al anterior.
+
+  - clave: pastor
+    nombre: Xan do Monte
+    apodo: Xan
+    oficio: pastor
+    oficio_nombre: pastor
+    genero: m
+    edad: 29
+    orden_llegada: 3
+    caracter: Soñador y despistado, de buen corazón. Canta coplas a las ovejas y les ha puesto nombre a todas.
+    rasgos: [sonador, bondadoso, miedoso]
+    objetivo: Tener el rebaño más lucido de la comarca y un perro que le haga caso.
+    secreto: Una noche de niebla se le escapó el rebaño y arrasó el huerto de hierbas de Uxía la curandera. Dejó que culparan a los jabalíes.
+    secreto_sobre: curandera
+    rumor_secreto: los jabalíes que arrasaron el huerto de Uxía la curandera balaban, y Xan el pastor lo sabe bien
+    dinero: 6
+    color: "#b08a4a"
+    habla:
+      muletillas: ["Como dice la copla…", "Las ovejas ya lo sabían.", "¡Ay, madre!"]
+      saludo: ¡Buen día, señor! ¿Habéis visto a la Rubia? Es una oveja.
+
+  - clave: escriba
+    nombre: Nuño Requeixo
+    apodo: maese Nuño
+    oficio: escriba
+    oficio_nombre: escriba
+    genero: m
+    edad: 47
+    orden_llegada: 4
+    caracter: Meticuloso, irónico y algo cobarde. Lo apunta todo y opina de todo, casi siempre por escrito.
+    rasgos: [curioso, picaro, miedoso]
+    objetivo: Dejar una crónica que se lea dentro de cien años, y que en ella él salga bien.
+    secreto: Lleva dos crónicas, la que enseña al señor y otra con lo que de veras piensa de cada vecino. En esa consta lo de Bieito y la panadera, porque los vio.
+    secreto_sobre: lenador
+    rumor_secreto: maese Nuño guarda un segundo libro bajo el jergón, y en él sale Bieito el leñador muy poco callado
+    dinero: 20
+    color: "#7a2f2f"
+    habla:
+      muletillas: ["Conste en acta.", "Dicho sea con el debido respeto…", "Lo tengo apuntado."]
+      saludo: A los pies de vuestra merced, pluma en mano.
+
+  - clave: mozo
+    nombre: Antón
+    apodo: Antonciño
+    oficio: mozo
+    oficio_nombre: mozo huérfano
+    genero: m
+    edad: 15
+    orden_llegada: 5
+    caracter: Espabilado, hambriento y preguntón. Está en todas partes y de todo se entera.
+    rasgos: [curioso, picaro, leal]
+    objetivo: Aprender un oficio de verdad y dejar de ser «el mozo» para ser alguien.
+    secreto: Sabe leer; aprendió espiando por la ventana de maese Nuño, y ha leído papeles del escriba que no eran para sus ojos.
+    secreto_sobre: escriba
+    rumor_secreto: Antón el mozo lee de corrido, y lo aprendió mirando por la ventana de maese Nuño el escriba
+    dinero: 1
+    color: "#c9773a"
+    habla:
+      muletillas: ["¡Yo no fui!", "¿Y eso por qué?", "Lo oí sin querer."]
+      saludo: ¡Señor, señor! ¿Hay algún recado? Corro mucho.
+
+  - clave: molinero
+    nombre: Roque Fariña
+    apodo: Roque
+    oficio: molinero
+    oficio_nombre: molinero
+    genero: m
+    edad: 52
+    orden_llegada: 6
+    caracter: Campechano y tramposillo. Ríe fuerte, pesa flojo y jura que la balanza es de fiar.
+    rasgos: [picaro, avaro, exagerado]
+    objetivo: Que todo el grano del valle pase por su muela, y quedarse lo que caiga.
+    secreto: Se queda más maquila de la que toca, un puñado de cada saco, y lleva la cuenta en una vara con muescas. Casi todo lo sisado es grano de doña Aldonza.
+    secreto_sobre: viuda
+    rumor_secreto: la maquila de Roque el molinero pesa el doble cuando el saco es de doña Aldonza
+    dinero: 28
+    color: "#d8d2c0"
+    habla:
+      muletillas: ["A peso justo, ¿eh?", "Palabra de molinero.", "Eso lo arreglo yo en dos vueltas de muela."]
+      saludo: ¡Señor! Buen año de harina os deseo, y a mí también.
+
+  - clave: panadera
+    nombre: Sabela Fornos
+    apodo: Sabela
+    oficio: panadera
+    oficio_nombre: panadera
+    genero: f
+    edad: 36
+    orden_llegada: 7
+    caracter: Viva, trabajadora y de genio pronto. Madruga más que nadie y no le calla nada a nadie.
+    rasgos: [orgulloso, terco, bondadoso]
+    objetivo: Que su pan sea el mejor de tres valles y que nadie vuelva a decirle cómo amasar.
+    secreto: Cuando falta trigo rebaja la masa con harina de castaña y le echa la culpa a la harina de Roque el molinero.
+    secreto_sobre: molinero
+    rumor_secreto: el pan de Sabela lleva castaña cuando escasea el trigo, y luego la culpa se la lleva Roque el molinero
+    dinero: 18
+    color: "#c2553f"
+    habla:
+      muletillas: ["Con la masa no se juega.", "A mí con cuentos, no.", "Antes del alba ya estaba yo en pie."]
+      saludo: Buenos días, señor. El pan, recién hecho; las quejas, al molinero.
+
+  - clave: herrero
+    nombre: Mauro Ferreiro
+    apodo: Mauro
+    oficio: herrero
+    oficio_nombre: herrero
+    genero: m
+    edad: 49
+    orden_llegada: 8
+    caracter: Fuerte, noble y bruto de maneras. Orgulloso de su oficio y avergonzado de sus deudas.
+    rasgos: [orgulloso, terco, leal]
+    objetivo: Saldar lo que debe sin que nadie le vea agachar la cabeza.
+    secreto: Para pagar parte de su deuda empeñó las herramientas del padre de Antón, que eran la herencia del mozo. El chico cree que se perdieron en la riada.
+    secreto_sobre: mozo
+    rumor_secreto: las herramientas del padre de Antón el mozo no se las llevó la riada, sino Mauro el herrero
+    dinero: 5
+    color: "#4a4a52"
+    habla:
+      muletillas: ["A golpes se endereza todo.", "El hierro no miente.", "Ya pagaré."]
+      saludo: Señor. Si es por hierro, decid; si es por dineros, otro día.
+
+  - clave: tabernero
+    nombre: Lourenzo Cunqueiro
+    apodo: Lourenzo
+    oficio: tabernero
+    oficio_nombre: tabernero
+    genero: m
+    edad: 44
+    orden_llegada: 9
+    caracter: Hablador, zalamero y gran escuchador. Sabe lo de todos y lo va soltando por cuartillos.
+    rasgos: [chismoso, picaro, exagerado]
+    objetivo: Que no haya trato, boda ni pelea en el valle que no pase por su mostrador.
+    secreto: Guarda en la bodega un cofre cerrado que le confió Tristán el forastero, sin preguntar qué lleva. Y agua el vino, pero eso lo sabe todo el mundo.
+    secreto_sobre: forastero
+    rumor_secreto: en la bodega de Lourenzo hay un cofre que no es suyo, y la llave la lleva Tristán el forastero
+    dinero: 24
+    color: "#8a4a2a"
+    habla:
+      muletillas: ["Eso se arregla con un cuartillo.", "Yo no he dicho nada.", "Entre nosotros…"]
+      saludo: ¡Señor! La casa invita. A la primera.
+
+  - clave: curandera
+    nombre: Uxía das Herbas
+    apodo: Uxía
+    oficio: curandera
+    oficio_nombre: curandera
+    genero: f
+    edad: 63
+    orden_llegada: 10
+    caracter: Sabia, socarrona y paciente. Conoce cada hierba del monte y cada achaque de la aldea, que es peor.
+    rasgos: [callado, bondadoso, desconfiado]
+    objetivo: Curar a quien se deje y que la dejen en paz con sus hierbas.
+    secreto: Le prepara a escondidas a don Froilán un cocimiento para los nervios, mientras él predica contra sus hierbas cada domingo.
+    secreto_sobre: cura
+    rumor_secreto: don Froilán el cura predica contra las hierbas de Uxía por la mañana y se las bebe por la noche
+    dinero: 9
+    color: "#3f6b5a"
+    habla:
+      muletillas: ["Para eso hay una hierba.", "El cuerpo avisa.", "Yo, ver, he visto de todo."]
+      saludo: Buenas, señor. Tenéis mala cara; dormid más y mandad menos.
+
+  - clave: cura
+    nombre: Froilán
+    apodo: don Froilán
+    oficio: cura
+    oficio_nombre: cura
+    genero: m
+    edad: 55
+    orden_llegada: 11
+    caracter: Solemne, nervioso y de sermón largo. Buen hombre a su pesar, con debilidad por los naipes.
+    rasgos: [devoto, miedoso, exagerado]
+    objetivo: Tener iglesia con campana, y que la campana se oiga hasta en la aldea de al lado.
+    secreto: Se jugó a los naipes con Lourenzo el tabernero las limosnas de la campana nueva, y las perdió. Anda rezando para que nadie pregunte por la campana.
+    secreto_sobre: tabernero
+    rumor_secreto: las limosnas de la campana duermen en el cajón de Lourenzo el tabernero, ganadas a don Froilán con tres reyes
+    dinero: 3
+    color: "#2b2b33"
+    habla:
+      muletillas: ["Alabado sea.", "Hijo mío…", "Eso es pecado, o lo será."]
+      saludo: La paz sea con vos, señor. ¿Habéis pensado ya en la campana?
+
+  - clave: forastero
+    nombre: Tristán
+    apodo: el forastero
+    oficio: forastero
+    oficio_nombre: forastero
+    genero: m
+    edad: 24
+    orden_llegada: 12
+    caracter: Reservado, cortés y demasiado atento a todo. Dice que es buhonero y casi nadie se lo cree.
+    rasgos: [callado, desconfiado, curioso]
+    objetivo: Encontrar lo que vino a buscar sin que nadie sepa qué es.
+    secreto: Vino buscando a su padre, que marchó de su tierra hace veinte años. Cree que es Mauro el herrero y aún no se atreve a decírselo.
+    secreto_sobre: herrero
+    rumor_secreto: Tristán el forastero mira a Mauro el herrero como quien busca parecidos
+    dinero: 30
+    color: "#2f5d7a"
+    habla:
+      muletillas: ["En mi tierra…", "No sabría deciros.", "Solo estoy de paso."]
+      saludo: Señor. Agradezco el sitio junto al fuego; no daré quehacer.
+
+# Relaciones de partida entre pares (de −100 a 100). Lo que no se ponga empieza en 0.
+# etiqueta: rivalidad | deuda | amor | amistad | recelo (el motor las usa para elegir temas de escena).
+relaciones:
+  - {entre: [molinero, panadera], valor: -55, etiqueta: rivalidad, nota: "Ella dice que su harina lleva tiza; él, que su pan pesa menos cada año."}
+  - {entre: [cura, curandera], valor: -50, etiqueta: rivalidad, nota: "Él cura con rezos y ella con hierbas, y los dos presumen de enfermos."}
+  - {entre: [herrero, viuda], valor: -35, etiqueta: deuda, nota: "El herrero debe 30 monedas a doña Aldonza desde que el difunto le fió el yunque.", debe: herrero, cantidad: 30}
+  - {entre: [lenador, panadera], valor: 70, etiqueta: amor, nota: "Se quieren a escondidas desde Vilavella."}
+  - {entre: [pastor, mozo], valor: 40, etiqueta: amistad, nota: "Xan le enseña a silbar al perro y a contar ovejas."}
+  - {entre: [tabernero, herrero], valor: 35, etiqueta: amistad, nota: "Compadres de mostrador."}
+  - {entre: [cura, viuda], valor: 30, etiqueta: amistad, nota: "La feligresa más puntual y la más crítica."}
+  - {entre: [curandera, panadera], valor: 35, etiqueta: amistad, nota: "Se cambian hierbas por hogazas."}
+  - {entre: [molinero, tabernero], valor: 20, etiqueta: amistad, nota: "Negocian en voz baja."}
+  - {entre: [viuda, pastor], valor: -15, etiqueta: recelo, nota: "Lindes mal avenidas."}
+  - {entre: [lenador, molinero], valor: -20, etiqueta: recelo, nota: "Bieito no se fía de quien pesa a ojo."}
+  - {entre: [escriba, mozo], valor: 15, etiqueta: amistad, nota: "El chico le lleva los recados y la tinta."}
+  - {entre: [escriba, viuda], valor: -10, etiqueta: recelo, nota: "Ella sospecha que la apunta mal en la crónica."}
+  - {entre: [forastero, tabernero], valor: 15, etiqueta: amistad, nota: "El único que le fía sin preguntar."}
+  - {entre: [forastero, viuda], valor: -20, etiqueta: recelo, nota: "Un mozo sin apellido y con bolsa llena, malo."}
+  - {entre: [forastero, herrero], valor: 5, nota: "El forastero ronda la fragua más de lo que pide el trato."}
+  - {entre: [lenador, pastor], valor: 25, etiqueta: amistad, nota: "Se entienden sin hablar, que es como le gusta a Bieito."}
+  - {entre: [lenador, escriba], valor: -5, nota: "A Bieito no le gusta que lo miren tanto."}
+
+# Rumores que ya corren el primer día. `sabe`: quién lo conoce de salida.
+rumores:
+  - sobre: herrero
+    origen: viuda
+    verdad: true
+    texto: Mauro el herrero debe treinta monedas a doña Aldonza desde hace diez años
+    sabe: [viuda, escriba]
+  - sobre: molinero
+    origen: lenador
+    verdad: true
+    texto: Roque el molinero pesa el grano con el dedo puesto en la balanza
+    sabe: [lenador, pastor]
+
+# Nombres para los vecinos que lleguen después del reparto.
+inmigrantes:
+  nombres_m: [Brais, Paio, Lois, Fiz, Iago, Cibrán, Amaro, Breixo, Mendo, Xurxo, Telmo, Vasco]
+  nombres_f: [Maruxa, Icía, Antía, Sabina, Mariña, Catuxa, Dorinda, Xiana, Elvira, Minia, Tareixa, Berta]
+  apellidos: [do Souto, da Ponte, Pereira, do Río, Castiñeira, da Fonte, Louzao, Piñeiro, do Val, Xesteira]
+  oficios: [labrador, labrador, labrador, cantero, guardia, labrador]
+  caracteres:
+    - Trabajador y de pocas palabras; vino buscando tierra y paz.
+    - Alegre y algo bocazas; cuenta cada día una historia distinta de por qué se fue de su pueblo.
+    - Desconfiado al principio, fiel después; mira mucho antes de saludar.
+    - Risueña y mañosa; arregla lo que se rompe y pregunta lo que no se debe.
+    - Cabezota y honrado; discute hasta con las gallinas, pero cumple.

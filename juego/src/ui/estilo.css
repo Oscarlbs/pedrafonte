@@ -1,0 +1,392 @@
+/* Estética de cuento de Pedrafonte: pergamino, tinta y lacre.
+   Las fases siguientes (barra de recursos, menú de construcción, ficha, consejo, pergamino del escriba,
+   charla…) deben montarse con estas variables y clases base para que todo case. */
+
+:root {
+  /* Papel y tinta */
+  --pergamino: #f4e8c8;
+  --pergamino-claro: #fbf3dc;
+  --pergamino-oscuro: #e2cf9f;
+  --pergamino-borde: #b89a5e;
+  --tinta: #3a2a1b;
+  --tinta-suave: #6d5741;
+  --tinta-tenue: #9a8566;
+  /* Acentos */
+  --lacre: #8f2f2a;
+  --lacre-claro: #b4463c;
+  --oro: #b8892e;
+  --verde: #55744d;
+  --azul: #4a6c88;
+  --bien: #55744d;
+  --mal: #a33a30;
+  /* Sombras y medidas */
+  --sombra: 0 6px 22px rgba(38, 24, 10, 0.38), 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+  --sombra-suave: 0 2px 8px rgba(38, 24, 10, 0.28);
+  --radio: 10px;
+  --radio-chico: 6px;
+  --hueco: 12px;
+  /* Tipografía: serifas del sistema, sin descargar fuentes */
+  --fuente: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', 'URW Palladio L', Georgia, serif;
+  --fuente-titulo: 'Hoefler Text', 'Baskerville', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --tam-texto: 15px;
+  --tam-chico: 12.5px;
+  --tam-titulo: 22px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #1b2233;
+  color: var(--tinta);
+  font-family: var(--fuente);
+  font-size: var(--tam-texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+#lienzo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+#lienzo:active {
+  cursor: grabbing;
+}
+
+/* Capa de cosas pegadas al mundo (bocadillos, nombres). No estorba al ratón. */
+#capa-mundo {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Capa de la interfaz: sus hijos deciden si atienden al ratón. */
+#interfaz {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+#interfaz > * {
+  pointer-events: auto;
+}
+
+.oculto {
+  display: none !important;
+}
+
+/* ── Pergamino: el panel base ── */
+.pergamino {
+  position: relative;
+  padding: var(--hueco) calc(var(--hueco) * 1.4);
+  color: var(--tinta);
+  background:
+    radial-gradient(120% 90% at 12% 8%, rgba(255, 255, 255, 0.5), transparent 55%),
+    radial-gradient(90% 80% at 92% 96%, rgba(150, 110, 50, 0.22), transparent 60%),
+    radial-gradient(60% 50% at 70% 20%, rgba(170, 130, 70, 0.1), transparent 70%),
+    linear-gradient(180deg, var(--pergamino-claro), var(--pergamino) 45%, var(--pergamino-oscuro));
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+}
+
+/* Doble filete de tinta por dentro, como una orla. */
+.pergamino::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(120, 88, 40, 0.38);
+  border-radius: calc(var(--radio) - 3px);
+  pointer-events: none;
+}
+
+.pergamino-titulo,
+.titulo {
+  margin: 0;
+  font-family: var(--fuente-titulo);
+  font-size: var(--tam-titulo);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-variant: small-caps;
+  color: var(--tinta);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.subtitulo {
+  margin: 2px 0 0;
+  font-size: var(--tam-chico);
+  font-style: italic;
+  color: var(--tinta-suave);
+}
+
+.etiqueta {
+  font-size: var(--tam-chico);
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+.nota {
+  font-size: var(--tam-chico);
+  font-style: italic;
+  color: var(--tinta-tenue);
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.separador {
+  align-self: stretch;
+  width: 1px;
+  margin: 2px 4px;
+  background: linear-gradient(180deg, transparent, rgba(120, 88, 40, 0.5), transparent);
+}
+
+/* ── Botones ── */
+.boton {
+  appearance: none;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  padding: 7px 13px 8px;
+  color: var(--tinta);
+  background: linear-gradient(180deg, #fff8e4, #ecdcae);
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio-chico);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 1px 2px rgba(38, 24, 10, 0.25);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.boton:hover {
+  background: linear-gradient(180deg, #fffdf2, #f3e4b8);
+}
+
+.boton:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0) inset, 0 0 1px rgba(38, 24, 10, 0.3);
+}
+
+.boton:focus-visible,
+.campo:focus-visible,
+.deslizador:focus-visible {
+  outline: 2px solid var(--oro);
+  outline-offset: 2px;
+}
+
+/* Botón elegido o principal: lacre. */
+.boton.activo,
+.boton-lacre {
+  color: #fff4e0;
+  background: linear-gradient(180deg, var(--lacre-claro), var(--lacre));
+  border-color: #6a211d;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 1px 3px rgba(38, 24, 10, 0.4);
+}
+
+.boton.activo:hover,
+.boton-lacre:hover {
+  background: linear-gradient(180deg, #c2554a, #9a3530);
+}
+
+.boton[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ── Campos ── */
+.campo {
+  appearance: none;
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 26px 7px 10px;
+  color: var(--tinta);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236d5741'/%3E%3C/svg%3E") no-repeat right 9px center,
+    linear-gradient(180deg, #fffaf0, #f0e2ba);
+  border: 1px solid var(--pergamino-borde);
+  border-radius: var(--radio-chico);
+  box-shadow: 0 1px 2px rgba(38, 24, 10, 0.15) inset;
+  cursor: pointer;
+}
+
+.deslizador {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 200px;
+  height: 18px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.deslizador::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(90, 64, 30, 0.55);
+  /* Noche, alba, día, ocaso y noche: el día de un vistazo. */
+  background: linear-gradient(90deg, #24304f 0%, #24304f 26%, #e9a868 33%, #9cc6e6 42%, #bfdcef 54%, #9cc6e6 66%, #eda35e 75%, #24304f 82%, #24304f 100%);
+}
+
+.deslizador::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(90, 64, 30, 0.55);
+  background: linear-gradient(90deg, #24304f 0%, #24304f 26%, #e9a868 33%, #9cc6e6 42%, #bfdcef 54%, #9cc6e6 66%, #eda35e 75%, #24304f 82%, #24304f 100%);
+}
+
+.deslizador::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d9655a, var(--lacre) 70%);
+  border: 1px solid #5c1c18;
+  box-shadow: 0 1px 3px rgba(38, 24, 10, 0.5);
+}
+
+.deslizador::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d9655a, var(--lacre) 70%);
+  border: 1px solid #5c1c18;
+}
+
+.reloj {
+  min-width: 46px;
+  font-family: var(--fuente-titulo);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ── Piezas de la pantalla de la Fase 1 ── */
+.cartela {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  min-width: 210px;
+  padding-right: 22px;
+}
+
+.barra-escena {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 24px);
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+@media (max-width: 1100px) {
+  .barra-escena {
+    flex-wrap: wrap;
+  }
+}
+
+.medidas {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  padding: 8px 14px;
+  font-size: var(--tam-chico);
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-suave);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.ayuda {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  max-width: 250px;
+  padding: 8px 14px;
+  line-height: 1.45;
+}
+
+/* La ayuda solo cabe junto a la barra en pantallas anchas. */
+@media (max-width: 1640px) {
+  .ayuda {
+    display: none;
+  }
+}
+
+/* ── Bocadillo de cómic sobre una figura ── */
+.bocadillo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: 230px;
+  padding: 7px 11px 8px;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--tinta);
+  background: var(--pergamino-claro);
+  border: 1.5px solid var(--tinta);
+  border-radius: 14px;
+  box-shadow: 2px 3px 0 rgba(38, 24, 10, 0.25);
+  will-change: transform;
+  margin-top: -12px;
+}
+
+.bocadillo::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  background: var(--pergamino-claro);
+  border-right: 1.5px solid var(--tinta);
+  border-bottom: 1.5px solid var(--tinta);
+  transform: rotate(45deg) skew(8deg, 8deg);
+}
+
+.bocadillo-nombre {
+  display: block;
+  font-size: 11px;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: var(--lacre);
+}
+
+/* Aviso a toda pantalla (carga, error de WebGL). */
+.aviso {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 420px;
+  text-align: center;
+  padding: 22px 30px;
+}

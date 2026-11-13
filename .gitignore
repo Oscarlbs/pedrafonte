@@ -1,0 +1,36 @@
+# Secretos
+.env
+.env.*
+!.env.ejemplo
+
+# Packs de modelos: pesan mucho y su licencia prohíbe redistribuirlos (ver docs/LICENCIAS.md)
+assets/*
+!assets/LEEME.md
+juego/public/modelos/
+juego/public/texturas/
+
+# Node
+node_modules/
+juego/dist/
+*.tsbuildinfo
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Datos locales
+*.sqlite
+*.sqlite3
+*.db
+datos-locales/
+deploy/copias/
+
+# Sistema
+.DS_Store
+*.log
+
+# Datos del servidor (base de datos, modelos y copias): nunca a git
+datos-servidor/

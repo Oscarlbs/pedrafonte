@@ -1,0 +1,171 @@
+# El tutorial: lecciones que el escriba va dando al señor nuevo, una detrás de otra. Editable.
+#
+# Cada lección:
+#   clave      identificador
+#   capitulo   título del capítulo al que pertenece
+#   titulo     lo que hay que hacer, en corto
+#   texto      lo que dice el escriba
+#   como       cómo se hace en el juego (botones y gestos)
+#   condicion  cuándo se da por cumplida (mismas variables que el resto de YAML; `hecho_x` cuenta las veces
+#              que el señor ha hecho algo: charla, decision, pergamino, gobierno, mapa, diplomacia, recluta,
+#              campana, victoria, defensa). Sin condición, se cumple pulsando «Entendido».
+#   boton      qué botón de la interfaz conviene señalar (construir, consejo, vecinos, leyes, mapa, tropas,
+#              adelantar, pergamino)
+#   premio     recursos que se dan al cumplirla
+# Solo se mira la lección en curso: no se puede adelantar una sin haber cumplido la anterior.
+
+pasos:
+  - clave: mirar
+    capitulo: Asentarse
+    titulo: Mirad vuestro valle
+    texto: "Bienvenido, señor. Soy vuestro escriba y me toca enseñaros el oficio. Esto es {aldea}: un claro, una choza y cuatro valientes. Lo primero, mirad bien lo que tenéis."
+    como: "Arrastrad para moveros por el valle. Con la rueda (o dos dedos) os acercáis. Con el botón derecho, o Mayús y arrastrar, giráis la vista."
+  - clave: choza
+    capitulo: Asentarse
+    titulo: Levantad otra choza
+    texto: "Somos cuatro y la choza es para dos. Quien duerme al raso se marcha a la primera helada, y con razón."
+    como: "Pulsad «Construir», elegid la choza en Vivienda y pinchad en un sitio libre del valle. Con la tecla R se gira."
+    condicion: "tiene_choza >= 2"
+    boton: construir
+    premio: {madera: 10}
+  - clave: campo
+    capitulo: Asentarse
+    titulo: Sembrad un campo de trigo
+    texto: "Lo que trajimos en los sacos se acaba. Un campo de trigo da grano casi todo el año; en invierno, poco."
+    como: "En «Construir», pestaña Producción: campo de trigo. Necesita quien lo trabaje, así que no hagáis más campos que brazos."
+    condicion: "tiene_campo >= 1"
+    boton: construir
+    premio: {grano: 15}
+  - clave: lenador
+    capitulo: Asentarse
+    titulo: Dad casa al leñador
+    texto: "Todo se hace con madera: casas, vallas, lanzas. Sin cabaña de leñador, el montón que trajimos no vuelve a crecer."
+    como: "En «Construir», Producción: cabaña del leñador. Arriba veis la madera que hay y cuánta entra cada día."
+    condicion: "tiene_cabana_lenador >= 1"
+    boton: construir
+    premio: {madera: 10}
+  - clave: hablar
+    capitulo: Asentarse
+    titulo: Hablad con un vecino
+    texto: "Vuestra gente tiene nombre, oficio, querencias y secretos. Os dirán más o menos según lo que os aprecien, y lo que oigáis no siempre será verdad."
+    como: "Pinchad en una figurita del valle (o abrid «Vecinos») y escribidle algo: preguntad por su trabajo, por otro vecino o por lo que se cuenta."
+    condicion: "hecho_charla >= 1"
+    boton: vecinos
+    premio: {pan: 6}
+  - clave: consejo
+    capitulo: Asentarse
+    titulo: Atended el consejo
+    texto: "Cada mañana alguien os pedirá algo. Decidáis lo que decidáis, alguien quedará contento y alguien no. Y lo que dejéis sin decidir se decide solo."
+    como: "Abrid «Consejo», leed la petición y elegid. Bajo cada opción pone lo que cuesta y una pista de lo que traerá."
+    condicion: "hecho_decision >= 1"
+    boton: consejo
+    premio: {oro: 5}
+  - clave: pergamino
+    capitulo: Asentarse
+    titulo: Dejad pasar un día y leed el pergamino
+    texto: "El tiempo aquí corre como fuera: una hora es una hora. Cada noche escribo lo que pasó, quién riñó con quién y qué opinan de vos. Si tenéis prisa, podéis adelantar un día."
+    como: "Pulsad «Adelantar un día» y leed el pergamino que os dejo. También lo encontraréis cada vez que volváis."
+    condicion: "hecho_pergamino >= 1 and dia >= 2"
+    boton: adelantar
+    premio: {grano: 10}
+
+  - clave: crecer
+    capitulo: Crecer
+    titulo: Llegad a seis vecinos
+    texto: "Los de la aldea vieja vendrán cuando haya techo y pan. Con cada uno llegan dos brazos... y sus deudas, sus piques y sus cuentos."
+    como: "Haced casas (caben cuatro) y cuidad de que haya comida para varios días: lo veis arriba, junto a la población."
+    condicion: "poblacion >= 6"
+    boton: construir
+    premio: {madera: 15, piedra: 8}
+  - clave: piedra
+    capitulo: Crecer
+    titulo: Abrid una cantera y cavad un pozo
+    texto: "La piedra hace falta para casi todo lo que dura: el pozo, el molino, la torre, la muralla. Y el pozo quita fiebres y da un sitio donde enterarse de todo."
+    como: "En «Construir»: cantera (Producción) y pozo (Servicios)."
+    condicion: "tiene_cantera >= 1 and tiene_pozo >= 1"
+    boton: construir
+    premio: {piedra: 10}
+  - clave: pan
+    capitulo: Crecer
+    titulo: Del trigo al pan
+    texto: "Comer grano crudo es de pobres y de caballos. Con molino y panadería, el mismo trigo da para más bocas y la gente anda de mejor humor."
+    como: "El molino de agua va pegado al río; después, la panadería. Fijaos en la cadena: campo, molino, horno."
+    condicion: "tiene_molino >= 1 and tiene_panaderia >= 1"
+    boton: construir
+    premio: {oro: 10}
+  - clave: gobernar
+    capitulo: Crecer
+    titulo: Tocad tributos o leyes
+    texto: "Ahora que hay jornales, hay tributos. Si apretáis, se llena el arca y se vacía la paciencia. Y hay leyes: toque de queda, rondas, mercado libre... Todas tienen su precio."
+    como: "Abrid «Leyes y tributos», cambiad el nivel de tributos o promulgad una ley. Mirad luego qué dice de ello el pergamino."
+    condicion: "hecho_gobierno >= 1"
+    boton: leyes
+    premio: {oro: 5}
+
+  - clave: empalizada
+    capitulo: Defenderse
+    titulo: Cercad la aldea
+    texto: "Una aldea con granero lleno y sin cerca es una invitación. Vendrán lobos, bandidos y, con el tiempo, gente peor. La empalizada es barata; la muralla, de piedra y para siempre."
+    como: "En «Construir», Defensa: empalizada. Se tiende con dos clics, principio y final. Poned al menos ocho tramos."
+    condicion: "tiene_empalizada + tiene_muralla >= 8"
+    boton: construir
+    premio: {madera: 15}
+  - clave: torre
+    capitulo: Defenderse
+    titulo: Herrería y torre de guardia
+    texto: "Los muros estorban; quien avisa y defiende es la guardia. La torre pide herrería, piedra y un vecino que suba a ella. Arriba veréis cuánto vale vuestra defensa."
+    como: "Primero la herrería (Producción), luego la torre de guardia (Defensa)."
+    condicion: "tiene_torre_guardia >= 1"
+    boton: construir
+    premio: {oro: 10}
+  - clave: cuartel
+    capitulo: Defenderse
+    titulo: Levantad un cuartel
+    texto: "Vuestros vecinos pueden coger una lanza, pero son labradores. Los hombres de armas cobran, comen y duermen en cuartel. Sin cuartel no hay más tropa que la milicia."
+    como: "En «Construir», Defensa: cuartel. Cada uno da cama a doce hombres."
+    condicion: "tiene_cuartel >= 1"
+    boton: construir
+    premio: {oro: 15}
+  - clave: tropa
+    capitulo: Defenderse
+    titulo: Alistad vuestros primeros hombres
+    texto: "Lanceros para el campo, arqueros para el muro, jinetes cuando el arca lo aguante. Todos cobran y comen cada noche: seis hombres son tres de grano y casi dos monedas al día. Si no hay con qué, se van, y con vuestras lanzas."
+    como: "Abrid «Hueste» y alistad al menos seis hombres. Mirad antes lo que cuesta mantenerlos cada día."
+    condicion: "tropas_total >= 6"
+    boton: tropas
+    premio: {grano: 20}
+
+  - clave: mapa
+    capitulo: El mundo
+    titulo: Abrid el mapa de la comarca
+    texto: "No estáis solos. En la comarca hay ocho señores, de un mayordomo con veinte casas a un conde con setenta lanzas. Unos comercian, otros amenazan y todos os miden."
+    como: "Abrid «Mapa». Pinchad en cada lugar para ver quién manda, cuánta gente tiene, qué os debe y qué podéis hacerle."
+    condicion: "hecho_mapa >= 1"
+    boton: mapa
+    premio: {oro: 5}
+  - clave: embajada
+    capitulo: El mundo
+    titulo: Mandad una embajada
+    texto: "Antes de la lanza, la palabra. Un presente mejora el trato; con buen trato hay alianza, y un aliado acude si os atacan y manda gente a vuestras guerras."
+    como: "En el mapa, elegid un vecino y mandadle un presente, o proponedle alianza si ya os aprecia."
+    condicion: "hecho_diplomacia >= 1"
+    boton: mapa
+    premio: {oro: 10}
+  - clave: campana
+    capitulo: El mundo
+    titulo: Sacad la hueste
+    texto: "Llegará el día en que queráis más. Se puede saquear, someter a vasallaje o conquistar la plaza. Empezad por quien podáis: los pastores cuentan las lanzas ajenas de cinco en cinco, y a veces se equivocan."
+    como: "En el mapa, elegid un territorio, el objetivo y cuánta tropa mandáis. Lo que mandéis no defiende la aldea mientras esté fuera."
+    condicion: "hecho_campana >= 1"
+    boton: mapa
+    premio: {grano: 20}
+  - clave: dominio
+    capitulo: El mundo
+    titulo: Ganad vuestro primer vasallo
+    texto: "Un vasallo paga tributo cada día y manda gente a vuestras campañas, mientras os tema. Con el primero dejáis de ser un señor a secas. Con los ocho, la comarca es vuestra."
+    como: "Venced a un vecino con el objetivo de someter o conquistar, o exigidle tributo cuando vuestra hueste doble a la suya."
+    condicion: "dominios >= 1"
+    boton: mapa
+    premio: {oro: 30}
+
+final: "Ya sabéis lo que yo sé, señor. Lo demás se aprende gobernando: quien manda mucho tiene muchos enemigos, y quien manda poco, muchos amos. Seguiré escribiendo cada noche."

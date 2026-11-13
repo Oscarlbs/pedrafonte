@@ -1,0 +1,36 @@
+# Tonos de una aldea. Editable. El tono cambia cómo hablan los vecinos y cómo escribe el escriba.
+#   coletillas  frases que el motor simulado cuelga de vez en cuando al final de una escena
+#   cronica     cómo abre y cierra el escriba su pergamino
+#   instrucciones  lo que se le dice al motor «claude» sobre el estilo
+cuento:
+  nombre: Cuento
+  descripcion: Cuento amable con retranca, en castellano con algún giro antiguo.
+  coletillas: []
+  cronica:
+    apertura: ["En {aldea}, a {fecha}.", "Crónica de {aldea}, día {dia} de su fundación, {fecha}."]
+    cierre: ["Y con esto doy fe, que para eso me pagan. Poco.", "Así fue, o así lo vi yo, que viene a ser lo mismo.", "Quede escrito, por si mañana alguien lo niega."]
+  instrucciones: Cuento amable con retranca gallega, en castellano con algún giro antiguo (vos, vuestra merced). Humor seco, ternura sin azúcar. Nada explícito ni cruel.
+crudo:
+  nombre: Crudo
+  descripcion: La Edad Media sin adornos, con barro, hambre y pocas bromas. Sin recrearse.
+  coletillas: ["Mal año viene.", "Así es la vida, y es corta.", "Y eso si llegamos al invierno."]
+  cronica:
+    apertura: ["{aldea}, {fecha}. Seguimos vivos, que no es poco.", "Día {dia}. {fecha}. Barro."]
+    cierre: ["No hay más que contar, ni ganas.", "Mañana, lo mismo o peor.", "Quien lea esto, que rece por nosotros."]
+  instrucciones: Tono crudo y sobrio. Vida dura, frases cortas, ironía amarga. Sin violencia gráfica ni contenido explícito.
+fantasia:
+  nombre: Fantasía
+  descripcion: El mismo valle, pero con trasgos en el molino, meigas en la niebla y un dragón del que todos hablan.
+  coletillas: ["Lo dijo el trasgo del molino.", "Las meigas andan revueltas.", "Y eso que el dragón aún duerme.", "Cosas de la Santa Compaña."]
+  cronica:
+    apertura: ["En {aldea}, a {fecha}, con luna propicia.", "Día {dia} de {aldea}; los trasgos, tranquilos. {fecha}."]
+    cierre: ["Que las meigas nos sean leves.", "Y el dragón, sin despertar. De momento.", "Lo firmo con tinta y con una ramita de ruda, por si acaso."]
+  instrucciones: Cuento de fantasía popular gallega (trasgos, meigas, Santa Compaña, un dragón lejano) contado con naturalidad y humor. Lo mágico es cotidiano. Nada explícito.
+comedia:
+  nombre: Comedia
+  descripcion: Todo sale regular y todo el mundo tiene algo que decir. Enredos, exageraciones y mucho descaro.
+  coletillas: ["¡Y encima sin almorzar!", "Esto no pasa ni en los romances.", "Que conste que yo avisé.", "¡Y la cabra, mirando!"]
+  cronica:
+    apertura: ["{aldea}, {fecha}. Agárrese vuestra merced.", "Día {dia}: nadie ha prendido fuego a nada. Todavía. {fecha}."]
+    cierre: ["Y hasta aquí puedo escribir sin reírme.", "Mañana más, y probablemente peor, y seguro que más gracioso.", "Firmo y me escondo."]
+  instrucciones: Comedia de enredo coral. Exageración, descaro, malentendidos y réplicas rápidas. Blanca, sin contenido explícito.

@@ -1,0 +1,117 @@
+# La guerra: tropas, campañas, asedios, vasallos y títulos. Editable.
+#
+# Como en todo lo demás, el motor decide (quién gana, cuántos caen, qué se trae) y la IA no pinta nada aquí.
+# «Fuerza» es la misma medida que la defensa de la aldea: una torre con guardia vale 10.
+
+# Dónde está vuestra aldea en el mapa de la comarca (0–100) y cuánto se anda en un día.
+aldea: {pos: [50, 58]}
+dia_de_marcha: 20
+
+# Tropas. coste: al reclutar · sueldo: cada noche, por cabeza · fuerza: lo que pesa en batalla ·
+# en_muro: fuerza si defiende la aldea tras muralla o empalizada · requiere: edificios que hacen falta.
+# La milicia son vuestros propios vecinos con una lanza: no pasa de un hombre por cada dos vecinos, no
+# necesita cuartel y, si la tenéis en armas más de `milicia_paciencia` días, la gente empieza a murmurar.
+unidades:
+  - clave: milicia
+    nombre: Milicia
+    singular: miliciano
+    plural: milicianos
+    descripcion: Vecinos con lanza y miedo. Baratos, y luego hay que mirarles a la cara.
+    coste: {grano: 3}
+    sueldo: {grano: 0.5}
+    fuerza: 1
+    en_muro: 1.5
+  - clave: lanceros
+    nombre: Lanceros
+    singular: lancero
+    plural: lanceros
+    descripcion: Hombres de armas a sueldo. Aguantan la línea y la paga puntual.
+    coste: {oro: 6, madera: 2}
+    sueldo: {oro: 0.3, grano: 0.5}
+    fuerza: 2
+    en_muro: 2.5
+    requiere: [cuartel]
+  - clave: arqueros
+    nombre: Arqueros
+    singular: arquero
+    plural: arqueros
+    descripcion: Poca cosa en campo abierto y un infierno desde lo alto de un muro.
+    coste: {oro: 7, madera: 4}
+    sueldo: {oro: 0.3, grano: 0.5}
+    fuerza: 1.5
+    en_muro: 4
+    requiere: [cuartel]
+  - clave: jinetes
+    nombre: Jinetes
+    singular: jinete
+    plural: jinetes
+    descripcion: Caballo, loriga y mala idea. Deciden las batallas y vacían el arca.
+    coste: {oro: 28, grano: 12}
+    sueldo: {oro: 1, grano: 1}
+    fuerza: 5
+    en_muro: 3
+    requiere: [cuartel, herreria]
+
+milicia_por_vecino: 0.5
+milicia_paciencia: 6
+
+# Objetivos de una campaña. umbral: cuánto hay que superar al defensor · muros: cuánto cuentan sus defensas.
+objetivos:
+  saquear:
+    nombre: Saquear
+    descripcion: Entrar, coger lo que se pueda y volver. No hace falta tomar los muros.
+    umbral: 0.75
+    muros: 0.4
+  someter:
+    nombre: Someter
+    descripcion: Vencer a su mesnada y hacerle jurar vasallaje. Pagará tributo cada día... mientras os tema.
+    umbral: 1.0
+    muros: 1.0
+  conquistar:
+    nombre: Conquistar
+    descripcion: Tomar la plaza y dejar guarnición vuestra. Rinde más y ya no se rebela, pero cuesta soldados.
+    umbral: 1.3
+    muros: 1.0
+
+# Lo que paga al día un vasallo, y un dominio conquistado, por cada punto de riqueza.
+tributo: {oro: 0.05, grano: 0.09}
+tributo_conquista: 1.6
+# Parte de su mesnada que un vasallo (y un aliado) manda a vuestras campañas.
+leva_vasallo: 0.25
+leva_aliado: 0.15
+# Guarnición que se queda en una plaza conquistada, en fuerza, por punto de defensa de la plaza.
+guarnicion: 0.25
+
+# Huestes enemigas. No salen antes del día `paz_inicial`; solo ataca quien os tiene ojeriza.
+paz_inicial: 15
+relacion_hostil: -30
+probabilidad_hueste: 0.06
+# Asedio: si hay muros y comida, el enemigo acampa. Cada noche pierde esta parte de su fuerza.
+asedio: {muros_minimos: 5, desgaste: 0.12, desgaste_arqueros: 0.18, dias_maximos: 6, grano_por_vecino: 1.5}
+# Embajadas: lo que cuesta un presente y el trato mínimo para que os escuchen una alianza.
+embajadas: {regalo: 10, relacion_alianza: 30}
+# Lo que os cuesta al día ser vasallo de otro, y lo que cuesta comprar la libertad.
+vasallaje: {oro: 3, grano: 6, rescate: 60}
+
+# Títulos según los dominios (vasallos y plazas conquistadas).
+titulos:
+  - {dominios: 0, nombre: Señor}
+  - {dominios: 1, nombre: Barón}
+  - {dominios: 2, nombre: Vizconde}
+  - {dominios: 4, nombre: Conde}
+  - {dominios: 6, nombre: Duque}
+  - {dominios: 8, nombre: Rey de la comarca}
+
+# Caminos del mapa (solo para pintarlos). «aldea» es la vuestra.
+caminos:
+  - [aldea, vilanova]
+  - [aldea, meiras]
+  - [aldea, castrovello]
+  - [aldea, montefurado]
+  - [aldea, ribadouro]
+  - [vilanova, portomouro]
+  - [montefurado, santamarina]
+  - [ribadouro, santamarina]
+  - [castrovello, lobeira]
+  - [ribadouro, lobeira]
+  - [meiras, castrovello]

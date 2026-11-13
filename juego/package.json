@@ -1,0 +1,25 @@
+{
+  "name": "pedrafonte-juego",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Pedrafonte: la escena 3D del juego (Vite + TypeScript + Three.js)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "tipos": "tsc --noEmit"
+  },
+  "dependencies": {
+    "n8ao": "^2.0.2",
+    "postprocessing": "^6.39.6",
+    "suncalc": "^2.1.4",
+    "three": "^0.187.0",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.187.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}

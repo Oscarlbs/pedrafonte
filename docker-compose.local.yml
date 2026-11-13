@@ -1,0 +1,23 @@
+# Solo para desarrollo en el Mac: PostgreSQL del mundo, accesible únicamente desde este equipo.
+# Se usa con:  docker compose -f docker-compose.local.yml up -d   (lo hace ./arrancar.sh)
+name: aldea-local
+services:
+  bd:
+    image: postgres:17
+    container_name: aldea-bd-local
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aldea
+      POSTGRES_DB: aldea
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta POSTGRES_PASSWORD en .env}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - aldea-bd-local:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aldea -d aldea"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  aldea-bd-local:
